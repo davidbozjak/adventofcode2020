@@ -35,7 +35,7 @@ namespace Day1_ExpenseReport
             {
                 for (int j = i + 1; j < inputs.Count; j++)
                 {
-                    for (int k =  j + 1; k < inputs.Count; k++)
+                    for (int k = j + 1; k < inputs.Count; k++)
                     {
                         if (inputs[i] + inputs[j] + inputs[k] == sumTo)
                         {
