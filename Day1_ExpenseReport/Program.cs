@@ -18,10 +18,8 @@ namespace Day1_ExpenseReport
 
             for (int i = 0; i < inputs.Count; i++)
             {
-                for (int j = 0; j < inputs.Count; j++)
+                for (int j = i + 1; j < inputs.Count; j++)
                 {
-                    if (i == j) continue;
-
                     if (inputs[i] + inputs[j] == sumTo)
                     {
                         var product = inputs[i] * inputs[j];
@@ -35,14 +33,10 @@ namespace Day1_ExpenseReport
 
             for (int i = 0; i < inputs.Count; i++)
             {
-                for (int j = 0; j < inputs.Count; j++)
+                for (int j = i + 1; j < inputs.Count; j++)
                 {
-                    if (i == j) continue;
-
-                    for (int k = 0; k < inputs.Count; k++)
+                    for (int k =  j + 1; k < inputs.Count; k++)
                     {
-                        if (j == k) continue;
-
                         if (inputs[i] + inputs[j] + inputs[k] == sumTo)
                         {
                             var product = inputs[i] * inputs[j] * inputs[k];
