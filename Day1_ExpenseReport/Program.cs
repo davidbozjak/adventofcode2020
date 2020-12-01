@@ -1,6 +1,6 @@
 ﻿using SantasToolbox;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Day1_ExpenseReport
 {
@@ -10,14 +10,7 @@ namespace Day1_ExpenseReport
         {
             using var inputProvider = new InputProvider<int>("Input.txt", int.TryParse);
 
-            var inputs = new List<int>();
-
-            while (inputProvider.MoveNext())
-            {
-                int expense = inputProvider.Current;
-
-                inputs.Add(expense);
-            }
+            var inputs = inputProvider.ToList();
 
             // Part 1
 
