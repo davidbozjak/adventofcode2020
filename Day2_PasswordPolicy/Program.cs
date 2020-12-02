@@ -1,5 +1,6 @@
 ﻿using SantasToolbox;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -9,17 +10,17 @@ namespace Day2_PasswordPolicy
     {
         static void Main(string[] args)
         {
-            Part1();
-
-            Part2();
-        }
-
-        static private void Part1()
-        {
             using var inputProvider = new InputProvider<PasswordPolicy?>("Input.txt", ParseString);
 
             var inputs = inputProvider.Where(w => w != null).Cast<PasswordPolicy>().ToList();
 
+            Part1(inputs);
+
+            Part2(inputs);
+        }
+
+        static private void Part1(IEnumerable<PasswordPolicy> inputs)
+        {
             var count = inputs.Where(w => PasswordComplies(w, w.ExamplePassword)).Count();
 
             Console.WriteLine($"{count} password comply with initial polciy");
@@ -32,12 +33,8 @@ namespace Day2_PasswordPolicy
             }
         }
 
-        static private void Part2()
+        static private void Part2(IEnumerable<PasswordPolicy> inputs)
         {
-            using var inputProvider = new InputProvider<PasswordPolicy?>("Input.txt", ParseString);
-
-            var inputs = inputProvider.Where(w => w != null).Cast<PasswordPolicy>().ToList();
-
             var count = inputs.Where(w => PasswordComplies(w, w.ExamplePassword)).Count();
 
             Console.WriteLine($"{count} password comply with the new polciy");
