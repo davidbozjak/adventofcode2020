@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantasToolbox", "SantasTool
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantasToolBoxTests", "SantasToolBoxTests\SantasToolBoxTests.csproj", "{6C281854-03DB-4655-8078-F19B3D0E1677}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day1_ExpenseReport", "Day1_ExpenseReport\Day1_ExpenseReport.csproj", "{D759FE4A-F3CF-4E5E-9AEE-B09C025D14FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day1_ExpenseReport", "Day1_ExpenseReport\Day1_ExpenseReport.csproj", "{D759FE4A-F3CF-4E5E-9AEE-B09C025D14FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day2_PasswordPolicy", "Day2_PasswordPolicy\Day2_PasswordPolicy.csproj", "{A27788E0-4BA2-4548-B941-9C90B474461B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D759FE4A-F3CF-4E5E-9AEE-B09C025D14FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D759FE4A-F3CF-4E5E-9AEE-B09C025D14FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D759FE4A-F3CF-4E5E-9AEE-B09C025D14FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A27788E0-4BA2-4548-B941-9C90B474461B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27788E0-4BA2-4548-B941-9C90B474461B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A27788E0-4BA2-4548-B941-9C90B474461B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A27788E0-4BA2-4548-B941-9C90B474461B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
