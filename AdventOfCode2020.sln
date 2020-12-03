@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day1_ExpenseReport", "Day1_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day2_PasswordPolicy", "Day2_PasswordPolicy\Day2_PasswordPolicy.csproj", "{A27788E0-4BA2-4548-B941-9C90B474461B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day3_Trajectory", "Day3_Trajectory\Day3_Trajectory.csproj", "{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A27788E0-4BA2-4548-B941-9C90B474461B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A27788E0-4BA2-4548-B941-9C90B474461B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A27788E0-4BA2-4548-B941-9C90B474461B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

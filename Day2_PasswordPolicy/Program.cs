@@ -66,6 +66,9 @@ namespace Day2_PasswordPolicy
 
         class PasswordPolicy
         {
+            private static readonly Regex numRegex = new Regex(@"\d+");
+            private static readonly Regex charRegex = new Regex(@"[a-z]");
+
             public int MinRepetition { get; }
             public int MaxRepetition { get; }
             public char RequiredChar { get; }
@@ -73,16 +76,14 @@ namespace Day2_PasswordPolicy
 
             public PasswordPolicy(string input)
             {
-                var numRegex = new Regex(@"\d+");
                 var numMatches = numRegex.Matches(input).Select(w => int.Parse(w.Value)).ToArray();
 
                 this.MinRepetition = numMatches[0];
                 this.MaxRepetition = numMatches[1];
 
-                var charRegex = new Regex(@"[a-z]");
                 this.RequiredChar = charRegex.Matches(input).Select(w => w.Value[0]).First();
 
-                this.ExamplePassword = input.Substring(input.IndexOf(':') + 2);
+                this.ExamplePassword = input[(input.IndexOf(':') + 2)..];
             }
         }
     }
