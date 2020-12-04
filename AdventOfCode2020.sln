@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day2_PasswordPolicy", "Day2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day3_Trajectory", "Day3_Trajectory\Day3_Trajectory.csproj", "{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day4_Passports", "Day4_Passports\Day4_Passports.csproj", "{9CD1AFDB-FEBA-458A-9542-264187874BC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FE822CD-A37D-4983-9C1D-5CA3CA8021D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
