@@ -18,6 +18,8 @@ namespace SantasToolbox
             this.fileStream = new Cached<StreamReader>(() => new StreamReader(filePath));
         }
 
+        public bool EndAtEmptyLine { get; set; } = true;
+
         public T Current { get; private set; }
 
         object? IEnumerator.Current => this.Current;
@@ -31,7 +33,7 @@ namespace SantasToolbox
         {
             var line = this.fileStream.Value.ReadLine();
 
-            if (line?.Length <= 0)
+            if (this.EndAtEmptyLine && line?.Length <= 0)
             {
                 return false;
             }
