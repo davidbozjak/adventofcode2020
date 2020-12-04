@@ -9,23 +9,23 @@ namespace Day3_Trajectory
     {
         static void Main(string[] args)
         {
-            using var inputProvider = new InputProvider<Row?>("Input.txt", Row.Parse);
+            using var inputProvider = new InputProvider<RepeatingRow?>("Input.txt", RepeatingRow.Parse);
 
-            var map = inputProvider.Where(w => w != null).Cast<Row>().ToList();
+            var map = inputProvider.Where(w => w != null).Cast<RepeatingRow>().ToList();
 
             Part1(map);
 
             Part2(map);
         }
 
-        static void Part1(IList<Row> map)
+        static void Part1(IList<RepeatingRow> map)
         {
             int noOfTrees = TraverseMapWithMethod(map, x => x + 3, y => y + 1);
 
             Console.WriteLine($"No of trees on the way: {noOfTrees}");
         }
 
-        static void Part2(IList<Row> map)
+        static void Part2(IList<RepeatingRow> map)
         {
             int case1 = TraverseMapWithMethod(map, x => x + 1, y => y + 1);
             int case2 = TraverseMapWithMethod(map, x => x + 3, y => y + 1);
@@ -38,7 +38,7 @@ namespace Day3_Trajectory
             Console.WriteLine($"No of trees on the way: {finalState}");
         }
 
-        static int TraverseMapWithMethod(IList<Row> map, Func<int, int> xFunc, Func<int, int> yFunc)
+        static int TraverseMapWithMethod(IList<RepeatingRow> map, Func<int, int> xFunc, Func<int, int> yFunc)
         {
             int noOfTrees = 0;
 
@@ -50,7 +50,7 @@ namespace Day3_Trajectory
             return noOfTrees;
         }
 
-        class Row
+        class RepeatingRow
         {
             private readonly string row;
 
@@ -59,18 +59,18 @@ namespace Day3_Trajectory
                 get => this.row[index % row.Length];
             }
 
-            public Row (string input)
+            public RepeatingRow (string input)
             {
                 this.row = input;
             }
 
-            public static bool Parse(string? input, out Row? value)
+            public static bool Parse(string? input, out RepeatingRow? value)
             {
                 value = null;
 
                 if (!string.IsNullOrWhiteSpace(input))
                 {
-                    value = new Row(input);
+                    value = new RepeatingRow(input);
                     return true;
                 }
                 else
