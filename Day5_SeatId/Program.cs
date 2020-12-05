@@ -10,9 +10,7 @@ namespace Day5_SeatId
         {
             using var inputProvider = new InputProvider<string>("Input.txt", GetString);
 
-            var inputs = inputProvider;
-
-            var orderedSeats = inputs.Select(w => GetSeatId(w)).OrderBy(w => w).ToList();
+            var orderedSeats = inputProvider.Select(w => GetSeatId(w)).OrderBy(w => w).ToList();
 
             Console.WriteLine($"Part1: Max Seat Id: {orderedSeats.Last()}");
 
@@ -31,21 +29,13 @@ namespace Day5_SeatId
             string rowString = input[..7];
             string seatString = input[7..];
 
-            rowString = rowString
+            var binaryString = input
                 .Replace('F', '0')
-                .Replace('B', '1');
-
-            int row = Convert.ToInt32(rowString, 2);
-
-            seatString = seatString
+                .Replace('B', '1')
                 .Replace('R', '1')
-                .Replace('L', '0');
+                .Replace('L', '0'); ;
 
-            int seat = Convert.ToInt32(seatString, 2);
-
-            int seatId = row * 8 + seat;
-
-            return seatId;
+            return Convert.ToInt32(binaryString, 2);
         }
 
         static bool GetString(string? input, out string value)
