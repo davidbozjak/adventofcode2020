@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day3_Trajectory", "Day3_Tra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day4_Passports", "Day4_Passports\Day4_Passports.csproj", "{9CD1AFDB-FEBA-458A-9542-264187874BC5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day5_SeatId", "Day5_SeatId\Day5_SeatId.csproj", "{F205F6C4-AF27-49C8-974C-44C4BD77BBE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CD1AFDB-FEBA-458A-9542-264187874BC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F205F6C4-AF27-49C8-974C-44C4BD77BBE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F205F6C4-AF27-49C8-974C-44C4BD77BBE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F205F6C4-AF27-49C8-974C-44C4BD77BBE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F205F6C4-AF27-49C8-974C-44C4BD77BBE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
