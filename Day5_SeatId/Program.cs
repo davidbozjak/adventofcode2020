@@ -32,8 +32,8 @@ namespace Day5_SeatId
             var binaryString = input
                 .Replace('F', '0')
                 .Replace('B', '1')
-                .Replace('R', '1')
-                .Replace('L', '0'); ;
+                .Replace('L', '0')
+                .Replace('R', '1');
 
             return Convert.ToInt32(binaryString, 2);
         }
