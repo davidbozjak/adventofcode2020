@@ -9,7 +9,7 @@ namespace Day6_Groups
     {
         static void Main(string[] args)
         {
-            var parser = new MultiLineParser();
+            var parser = new MultiLineParser<Group>(() => new Group(), (g, v) => g.AddLine(v));
             using var inputProvider = new InputProvider<Group?>("Input.txt", parser.AddLine)
             {
                 EndAtEmptyLine = false
@@ -68,46 +68,6 @@ namespace Day6_Groups
                 }
 
                 return intersection.Count();
-            }
-        }
-
-        class MultiLineParser
-        {
-            private Group? currentGroup = null;
-
-            public bool AddLine(string? input, out Group? value)
-            {
-                value = null;
-
-                if (input == null)
-                {
-                    if (currentGroup != null)
-                    {
-                        value = currentGroup;
-                        currentGroup = null;
-                        return true;
-                    }
-                    else return false;
-                }
-
-                if (string.IsNullOrWhiteSpace(input) && currentGroup == null)
-                    return false;
-
-                if (string.IsNullOrWhiteSpace(input) && currentGroup != null)
-                {
-                    value = currentGroup;
-                    currentGroup = null;
-                    return true;
-                }
-
-                if (currentGroup == null)
-                {
-                    currentGroup = new Group();
-                }
-
-                currentGroup.AddLine(input);
-
-                return true;
             }
         }
     }

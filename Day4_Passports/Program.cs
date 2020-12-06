@@ -9,7 +9,7 @@ namespace Day4_Passports
     {
         static void Main(string[] args)
         {
-            var parser = new MultiLineParser();
+            var parser = new MultiLineParser<Passport>(() => new Passport(), UpdatePassportWithValues);
             using var inputProvider = new InputProvider<Passport?>("Input.txt", parser.AddLine)
             {
                 EndAtEmptyLine = false
@@ -23,6 +23,29 @@ namespace Day4_Passports
             // Part 1            
             Console.WriteLine($"Part1: Number of valid passports: {passports.Count(w => w.IsValid(false))}");
             Console.WriteLine($"Part2: Number of valid passports: {passports.Count(w => w.IsValid(true))}");
+        }
+
+        private static void UpdatePassportWithValues(Passport passport, string input)
+        {
+            passport.BirthYear = ParseKeyFromFileOrNull(input, "byr") ?? passport.BirthYear;
+            passport.IssueYear = ParseKeyFromFileOrNull(input, "iyr") ?? passport.IssueYear;
+            passport.ExpirationYear = ParseKeyFromFileOrNull(input, "eyr") ?? passport.ExpirationYear;
+            passport.Height = ParseKeyFromFileOrNull(input, "hgt") ?? passport.Height;
+            passport.HairColor = ParseKeyFromFileOrNull(input, "hcl") ?? passport.HairColor;
+            passport.EyeColor = ParseKeyFromFileOrNull(input, "ecl") ?? passport.EyeColor;
+            passport.PassportID = ParseKeyFromFileOrNull(input, "pid") ?? passport.PassportID;
+            passport.CountryID = ParseKeyFromFileOrNull(input, "cid") ?? passport.CountryID;
+        }
+
+        private static string? ParseKeyFromFileOrNull(string input, string key)
+        {
+            if (!input.Contains(key)) return null;
+
+            int startIndex = input.IndexOf(key) + key.Length + 1;
+            int stopIndex = input.IndexOf(" ", startIndex);
+            int length = (stopIndex > startIndex ? stopIndex : input.Length) - startIndex;
+
+            return input.Substring(startIndex, length);
         }
 
         class Passport
@@ -122,65 +145,5 @@ namespace Day4_Passports
                 return true;
             }
         }
-
-        class MultiLineParser
-        {
-            private Passport? currentPassport = null;
-
-            public bool AddLine(string? input, out Passport? value)
-            {
-                value = null;
-
-                if (input == null)
-                {
-                    if (currentPassport != null)
-                    {
-                        value = currentPassport;
-                        currentPassport = null;
-                        return true;
-                    }
-                    else return false;
-                }
-
-                if (string.IsNullOrWhiteSpace(input) && currentPassport == null)
-                    return false;
-
-                if (string.IsNullOrWhiteSpace(input) && currentPassport != null)
-                {
-                    value = currentPassport;
-                    currentPassport = null;
-                    return true;
-                }
-
-                if (currentPassport == null)
-                {
-                    currentPassport = new Passport();
-                }
-
-                //start parsing fields
-                currentPassport.BirthYear = ParseKeyFromFileOrNull(input, "byr") ?? currentPassport.BirthYear;
-                currentPassport.IssueYear = ParseKeyFromFileOrNull(input, "iyr") ?? currentPassport.IssueYear;
-                currentPassport.ExpirationYear = ParseKeyFromFileOrNull(input, "eyr") ?? currentPassport.ExpirationYear;
-                currentPassport.Height = ParseKeyFromFileOrNull(input, "hgt") ?? currentPassport.Height;
-                currentPassport.HairColor = ParseKeyFromFileOrNull(input, "hcl") ?? currentPassport.HairColor;
-                currentPassport.EyeColor = ParseKeyFromFileOrNull(input, "ecl") ?? currentPassport.EyeColor;
-                currentPassport.PassportID = ParseKeyFromFileOrNull(input, "pid") ?? currentPassport.PassportID;
-                currentPassport.CountryID = ParseKeyFromFileOrNull(input, "cid") ?? currentPassport.CountryID;
-
-                return true;
-            }
-        }
-
-        private static string? ParseKeyFromFileOrNull(string input, string key)
-        {
-            if (!input.Contains(key)) return null;
-
-            int startIndex = input.IndexOf(key) + key.Length + 1;
-            int stopIndex = input.IndexOf(" ", startIndex);
-            int length = (stopIndex > startIndex ? stopIndex : input.Length) - startIndex;
-
-            return input.Substring(startIndex, length);
-        }
-        
     }
 }
