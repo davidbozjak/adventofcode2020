@@ -9,7 +9,7 @@ namespace Day6_Groups
     {
         static void Main(string[] args)
         {
-            var parser = new MultiLineParser<Group>(() => new Group(), (g, v) => g.AddLine(v));
+            var parser = new MultiLineParser<Group>(() => new Group(), (g, v) => g.Add(v));
             using var inputProvider = new InputProvider<Group?>("Input.txt", parser.AddLine)
             {
                 EndAtEmptyLine = false
@@ -36,8 +36,7 @@ namespace Day6_Groups
                 this.countIntersect = new Cached<int>(GetCountOfGroupIntersection);
             }
 
-
-            public void AddLine(string value)
+            public void Add(string value)
             {
                 this.allLines.Add(value);
                 this.countUnion.Reset();

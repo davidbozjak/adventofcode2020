@@ -26,9 +26,6 @@ namespace Day5_SeatId
 
         private static int GetSeatId(string input)
         {
-            string rowString = input[..7];
-            string seatString = input[7..];
-
             var binaryString = input
                 .Replace('F', '0')
                 .Replace('B', '1')
