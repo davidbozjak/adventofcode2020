@@ -21,41 +21,49 @@ namespace Day6_Groups
             Console.WriteLine($"Part 1: Sum of groups unions: {sumUnion}");
 
             var sumIntersection = groups.Sum(w => w.CountOfGroupIntersection);
-            Console.WriteLine($"Part 1: Sum of groups intersections: {sumIntersection}");
+            Console.WriteLine($"Part 2: Sum of groups intersections: {sumIntersection}");
         }
 
         class Group
         {
             private readonly List<string> allLines = new List<string>();
+            private readonly Cached<int> countUnion;
+            private readonly Cached<int> countIntersect;
+
+            public Group()
+            {
+                this.countUnion = new Cached<int>(GetCountOfGroupUnion);
+                this.countIntersect = new Cached<int>(GetCountOfGroupIntersection);
+            }
+
 
             public void AddLine(string value)
             {
                 this.allLines.Add(value);
+                this.countUnion.Reset();
+                this.countIntersect.Reset();
             }
 
             public int CountOfGroupUnion
             {
-                get => GetCountOfGroupUnion();
+                get => this.countUnion.Value;
             }
 
             public int CountOfGroupIntersection
             {
-                get => GetCountOfGroupIntersection();
+                get => this.countIntersect.Value;
             }
 
             private int GetCountOfGroupUnion()
             {
-                HashSet<char> set = new HashSet<char>();
+                IEnumerable<char> intersection = this.allLines[0];
 
-                foreach (var line in this.allLines)
+                for (int i = 1; i < this.allLines.Count; i++)
                 {
-                    foreach (var c in line)
-                    {
-                        set.Add(c);
-                    }
+                    intersection = intersection.Union(this.allLines[i]);
                 }
 
-                return set.Count;
+                return intersection.Count();
             }
 
             private int GetCountOfGroupIntersection()
