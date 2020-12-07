@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day5_SeatId", "Day5_SeatId\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day6_Groups", "Day6_Groups\Day6_Groups.csproj", "{91455333-4A67-427F-BC39-74765DAEF6B2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day7_Bags", "Day7_Bags\Day7_Bags.csproj", "{BC894283-FDB5-4089-ABCD-9F906D6007FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{91455333-4A67-427F-BC39-74765DAEF6B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91455333-4A67-427F-BC39-74765DAEF6B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91455333-4A67-427F-BC39-74765DAEF6B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC894283-FDB5-4089-ABCD-9F906D6007FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC894283-FDB5-4089-ABCD-9F906D6007FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC894283-FDB5-4089-ABCD-9F906D6007FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC894283-FDB5-4089-ABCD-9F906D6007FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
