@@ -7,8 +7,6 @@ namespace Day10_TBN
 {
     class Program
     {
-        static int maxStartIndex = 0;
-
         static void Main(string[] args)
         {
             using var inputProvider = new InputProvider<int>("Input.txt", int.TryParse);
@@ -31,12 +29,33 @@ namespace Day10_TBN
 
             Console.WriteLine($"Part 1: Diff1: {noOfDiff1} Diff3: {noOfDiff3} Multiplied: {noOfDiff1 * noOfDiff3}");
 
-            var noOptions = 1 + MinimizeChain(inputs, 1);
+            Dictionary<int, long> countForIndex = new Dictionary<int, long>();
+            countForIndex.Add(inputs.Count - 2, 1); // only one way to reach the last one, since I added it myself - it is "artificial"
+
+            var noOptions = BuildChain(inputs, 0, countForIndex);
 
             Console.WriteLine($"Part 2: NoOptions: {noOptions}");
+        }
 
-            Console.ReadLine();
-            //var chain = MakeChain(inputs);
+        static long BuildChain(IList<int> adapters, int startIndex, Dictionary<int, long> countForIndex)
+        {
+            if (countForIndex.ContainsKey(startIndex))
+                return countForIndex[startIndex];
+
+            long waysToReach = 0;
+
+            for (int i = 1; i <= 3; i++)
+            {
+                if (startIndex + i >= adapters.Count) break;
+
+                if (adapters[startIndex + i] - adapters[startIndex] <= 3)
+                {
+                    waysToReach += BuildChain(adapters, startIndex + i, countForIndex);
+                }
+            }
+
+            countForIndex[startIndex] = waysToReach;
+            return waysToReach;
         }
 
         static bool IsValidChain(IList<int> chain)
@@ -49,36 +68,6 @@ namespace Day10_TBN
             }
 
             return true;
-        }
-
-        static long MinimizeChain(IList<int> chain, int startIndex)
-        {
-            if (startIndex > maxStartIndex)
-            {
-                Console.WriteLine(startIndex);
-                maxStartIndex = startIndex;
-            }
-
-            long noOptions = 0;
-
-            for (int i = startIndex; i < chain.Count - 1; i++)
-            {
-                var tmpList = chain.ToList();
-                tmpList.Remove(chain[i]);
-
-                if (IsValidChain(tmpList))
-                {
-                    //PrintChain(tmpList);
-                    noOptions = noOptions + 1 + MinimizeChain(tmpList, i);
-                }
-            }
-
-            return noOptions;
-        }
-
-        static void PrintChain(IList<int> chain)
-        {
-            Console.WriteLine(string.Join(", ", chain));
         }
     }
 }
