@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day8_InstructionLoop", "Day
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day9_Sublists", "Day9_Sublists\Day9_Sublists.csproj", "{4B7878E4-2DE9-4DAF-92A3-6E09A4D83047}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day10_Adapters", "Day10_Adapters\Day10_Adapters.csproj", "{FAA810BB-08D2-445C-995D-B017C5F1E900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{4B7878E4-2DE9-4DAF-92A3-6E09A4D83047}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B7878E4-2DE9-4DAF-92A3-6E09A4D83047}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B7878E4-2DE9-4DAF-92A3-6E09A4D83047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAA810BB-08D2-445C-995D-B017C5F1E900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA810BB-08D2-445C-995D-B017C5F1E900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA810BB-08D2-445C-995D-B017C5F1E900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA810BB-08D2-445C-995D-B017C5F1E900}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
