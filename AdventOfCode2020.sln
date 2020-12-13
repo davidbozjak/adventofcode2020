@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day11_GameOfThrones", "Day1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day12_Ship", "Day12_Ship\Day12_Ship.csproj", "{75585E6B-2331-4E71-9209-11D6AC0EEA7A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day13_Departures", "Day13_Departures\Day13_Departures.csproj", "{81E576FD-9E24-4C12-AB46-F02299EDA342}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{75585E6B-2331-4E71-9209-11D6AC0EEA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75585E6B-2331-4E71-9209-11D6AC0EEA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75585E6B-2331-4E71-9209-11D6AC0EEA7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
