@@ -12,6 +12,7 @@ namespace Day13_Departures
             using var inputProvider = new InputProvider<string>("Input.txt", GetString);
 
             var input = inputProvider.ToList();
+            
             Part1(input);
             Part2(input[1]);
         }

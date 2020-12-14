@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day12_Ship", "Day12_Ship\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day13_Departures", "Day13_Departures\Day13_Departures.csproj", "{81E576FD-9E24-4C12-AB46-F02299EDA342}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day14_Masking", "Day14_Masking\Day14_Masking.csproj", "{502B6574-0645-46E9-9D00-7850E1533346}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81E576FD-9E24-4C12-AB46-F02299EDA342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{502B6574-0645-46E9-9D00-7850E1533346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{502B6574-0645-46E9-9D00-7850E1533346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{502B6574-0645-46E9-9D00-7850E1533346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{502B6574-0645-46E9-9D00-7850E1533346}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
