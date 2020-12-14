@@ -1,7 +1,7 @@
 ﻿using SantasToolbox;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Day14_Masking
@@ -17,6 +17,7 @@ namespace Day14_Masking
             var input = inputProvider.ToList();
             
             Part1(input);
+
             Part2(input);
         }
 
@@ -115,7 +116,7 @@ namespace Day14_Masking
 
             Console.WriteLine($"Part 2: Sum of all non-zero values: {memory.Values.Sum()}");
 
-            IList<long> GetAddressesToWrite(string mask, long address)
+            static IList<long> GetAddressesToWrite(string mask, long address)
             {
                 var indexToSuperimpose = new List<int>();
 
