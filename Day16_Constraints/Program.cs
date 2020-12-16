@@ -1,7 +1,7 @@
 ﻿using SantasToolbox;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Day16_Constraints
@@ -55,7 +55,7 @@ namespace Day16_Constraints
                 }
             }
 
-            Console.WriteLine($"Part 1: Sum of all invlaid tickets: {invalidValues.Sum()}");
+            Console.WriteLine($"Part 1: Sum of all invlaid values: {invalidValues.Sum()}");
 
             invalidTickets.ForEach(w => nearbyTickets.Remove(w));
 
@@ -102,7 +102,7 @@ namespace Day16_Constraints
                 multiplicationOfMyDepartureValues *= myTicket[constraint.IndexInInput];
             }
 
-            Console.WriteLine($"Part 2: {multiplicationOfMyDepartureValues}");
+            Console.WriteLine($"Part 2 Multiplication of the departure fields: {multiplicationOfMyDepartureValues}");
         }
 
         static bool GetString(string? input, out string value)
