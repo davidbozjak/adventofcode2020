@@ -17,11 +17,11 @@ namespace Day18_ExpressionEvaluation
 
             var input = inputProvider.ToList();
 
-            long sumLeftToRight = input.Sum(w => EvaluateExpressionLeftToRight(w));
+            long sumLeftToRight = input.Sum(w => EvaluateExpression(w, EvaluateFlatLeftToRight));
 
             Console.WriteLine($"Part 1: {sumLeftToRight}");
 
-            long sumAdditionFirst = input.Sum(w => EvaluateExpressionAdditionFirst(w));
+            long sumAdditionFirst = input.Sum(w => EvaluateExpression(w, EvaluateFlatAdditionFirst));
 
             Console.WriteLine($"Part 2: {sumAdditionFirst}");
         }
@@ -33,13 +33,13 @@ namespace Day18_ExpressionEvaluation
             return !string.IsNullOrWhiteSpace(input);
         }
 
-        static long EvaluateExpressionLeftToRight(string input)
+        static long EvaluateExpression(string input, Func<IList<long>, IList<string>, long> flatEvalFunction)
         {
             string? parenthesisStr = LongestParenthesisOrNull(input);
 
             while (parenthesisStr != null)
             {
-                var value = EvaluateExpressionLeftToRight(parenthesisStr[1..^1]);
+                var value = EvaluateExpression(parenthesisStr[1..^1], flatEvalFunction);
                 input = input.Replace(parenthesisStr, value.ToString());
 
                 parenthesisStr = LongestParenthesisOrNull(input);
@@ -48,6 +48,11 @@ namespace Day18_ExpressionEvaluation
             var numbers = numRegex.Matches(input).Select(w => long.Parse(w.Value)).ToList();
             var operators = operatorsRegex.Matches(input).Select(w => w.Value).ToList();
 
+            return flatEvalFunction(numbers, operators);
+        }
+
+        static long EvaluateFlatLeftToRight(IList<long> numbers, IList<string> operators)
+        {
             int numIndex = 0;
             long result = numbers[numIndex++];
 
@@ -67,21 +72,8 @@ namespace Day18_ExpressionEvaluation
             return result;
         }
 
-        static long EvaluateExpressionAdditionFirst(string input)
+        static long EvaluateFlatAdditionFirst(IList<long> numbers, IList<string> operators)
         {
-            string? parenthesisStr = LongestParenthesisOrNull(input);
-
-            while (parenthesisStr != null)
-            {
-                var value = EvaluateExpressionAdditionFirst(parenthesisStr[1..^1]);
-                input = input.Replace(parenthesisStr, value.ToString());
-
-                parenthesisStr = LongestParenthesisOrNull(input);
-            }
-
-            var numbers = numRegex.Matches(input).Select(w => long.Parse(w.Value)).ToList();
-            var operators = operatorsRegex.Matches(input).Select(w => w.Value).ToList();
-
             while (operators.Contains("+"))
             {
                 var index = operators.IndexOf("+");
