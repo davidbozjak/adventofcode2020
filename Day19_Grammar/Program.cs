@@ -14,7 +14,7 @@ namespace Day19_Grammar
 
         static void Main(string[] args)
         {
-            using var ruleProvider = new InputProvider<string>("Rules.txt", GetString);   
+            using var ruleProvider = new InputProvider<string>("Rules.txt", GetString);
 
             foreach (var line in ruleProvider)
             {
@@ -27,8 +27,28 @@ namespace Day19_Grammar
             using var inputProvider = new InputProvider<string>("Input.txt", GetString);
             var input = inputProvider.ToList();
 
-            int countPart1 = input.Count(w => targetRule.IsMatch(w, 0, out int length) && length == w.Length);
+            int countPart1 = input.Count(w =>
+            {
+                var match = targetRule.IsMatch(w, 0);
+                return match.isMatch && match.charsUsed.Any(ww => ww == w.Length);
+            });
+
             Console.WriteLine($"Part 1: Inputs that matches rule 0: {countPart1}");
+
+            // for part 2 replace two rules
+            ruleDatabase[8] = new Rule("8: 42 | 42 8");
+            ruleDatabase[11] = new Rule("11: 42 31 | 42 11 31");
+
+            //var match = targetRule.IsMatch("babbbbaabbbbbabbbbbbaabaaabaaa", 0);
+
+            int countPart2 = input.Count(w =>
+            {
+                var match = targetRule.IsMatch(w, 0);
+                return match.isMatch && match.charsUsed.Any(ww => ww == w.Length);
+            });
+
+            Console.WriteLine($"Part 2: Inputs that matches rule 0: {countPart2}");
+            //Console.WriteLine(string.Join(Environment.NewLine, input.Where(w => targetRule.IsMatch(w, 0, out int length) && length == w.Length)));
         }
 
         static bool GetString(string? input, out string value)
@@ -45,10 +65,10 @@ namespace Day19_Grammar
             private readonly char? singleLetterToMatch;
             private readonly List<List<int>>? possibleSubrules;
 
-            public Rule (string input)
+            public Rule(string input)
             {
                 var numbers = numRegex.Matches(input).Select(w => int.Parse(w.Value)).ToList();
-                
+
                 this.Id = numbers[0];
 
                 var letter = singleLetterRegex.Match(input);
@@ -68,9 +88,9 @@ namespace Day19_Grammar
                             var indexOfSeperator = input.IndexOf("|", i);
                             indexOfSeperator = indexOfSeperator < 0 ? input.Length : indexOfSeperator;
                             var subrule = input[i..indexOfSeperator].Trim();
-                            
+
                             this.possibleSubrules.Add(numRegex.Matches(subrule).Select(w => int.Parse(w.Value)).ToList());
-                            
+
                             i = indexOfSeperator;
                         }
                     }
@@ -81,45 +101,67 @@ namespace Day19_Grammar
                 }
             }
 
-            public bool IsMatch(string input, int startIndex, out int charsUsed)
+            public (bool isMatch, IList<int> charsUsed) IsMatch(string input, int startIndex)
             {
                 if (this.singleLetterToMatch != null)
                 {
-                    charsUsed = 1;
-                    return input.Length > startIndex && this.singleLetterToMatch == input[startIndex];
+                    if (input.Length > startIndex && this.singleLetterToMatch == input[startIndex])
+                    {
+                        return (true, new[] { 1 });
+                    }
+                    else
+                    {
+                        return (false, new[] { 0 });
+                    }
                 }
                 else if (this.possibleSubrules != null)
                 {
-                    charsUsed = 0;
+                    var results = this.possibleSubrules
+                        .Select(w => MatchRules(input, startIndex, w.Select(ww => ruleDatabase[ww]).ToList()))
+                        .ToList();
 
-                    foreach (var ruleList in this.possibleSubrules)
+                    if (results.Any(w => w.isMatch))
                     {
-                        var rules = ruleList.Select(w => ruleDatabase[w]).ToList();
-                        charsUsed = 0;
-
-                        bool matchesSublist = true;
-                        int innerStartIndex = startIndex;
-
-                        for (int i = 0; i < rules.Count; i++)
-                        {
-                            var match = rules[i].IsMatch(input, innerStartIndex, out int count);
-
-                            if (!match)
-                            {
-                                matchesSublist = false;
-                                break;
-                            }
-                            
-                            charsUsed += count;
-                            innerStartIndex += count;
-                        }
-
-                        if (matchesSublist) return true;
+                        return (true, results.Where(w => w.isMatch).SelectMany(w => w.charsUsed).ToList());
                     }
-
-                    return false;
+                    else return (false, new[] { 0 });
                 }
                 else throw new Exception();
+            }
+
+            private (bool isMatch, IList<int> charsUsed) MatchRules(string input, int startIndex, List<Rule> rules)
+            {
+                bool allMatch = true;
+                List<int> charsUsed = new List<int>() { 0 };
+
+                for (int i = 0; i < rules.Count; i++)
+                {
+                    List<int> startsForNextRule = new List<int>();
+                    bool anyMatch = false;
+                    while (charsUsed.Count > 0)
+                    {
+                        var c = charsUsed[0];
+                        charsUsed.RemoveAt(0);
+
+                        var result = rules[i].IsMatch(input, startIndex + c);
+
+                        if (!result.isMatch) continue;
+                        anyMatch = true;
+
+                        startsForNextRule.AddRange(result.charsUsed.Where(w => w > 0).Select(w => w + c));
+                    }
+                    
+                    if (!anyMatch)
+                    {
+                        allMatch = false;
+                        break;
+                    }
+
+                    charsUsed = startsForNextRule;
+                }
+
+                if (allMatch) return (true, charsUsed);
+                else return (false, new [] {0});
             }
         }
     }
