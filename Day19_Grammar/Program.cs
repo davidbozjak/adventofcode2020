@@ -39,8 +39,6 @@ namespace Day19_Grammar
             ruleDatabase[8] = new Rule("8: 42 | 42 8");
             ruleDatabase[11] = new Rule("11: 42 31 | 42 11 31");
 
-            //var match = targetRule.IsMatch("babbbbaabbbbbabbbbbbaabaaabaaa", 0);
-
             int countPart2 = input.Count(w =>
             {
                 var match = targetRule.IsMatch(w, 0);
@@ -48,7 +46,6 @@ namespace Day19_Grammar
             });
 
             Console.WriteLine($"Part 2: Inputs that matches rule 0: {countPart2}");
-            //Console.WriteLine(string.Join(Environment.NewLine, input.Where(w => targetRule.IsMatch(w, 0, out int length) && length == w.Length)));
         }
 
         static bool GetString(string? input, out string value)
@@ -161,7 +158,7 @@ namespace Day19_Grammar
                 }
 
                 if (allMatch) return (true, charsUsed);
-                else return (false, new [] {0});
+                else return (false, new [] { 0 });
             }
         }
     }
