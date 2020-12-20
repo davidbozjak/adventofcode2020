@@ -1,5 +1,4 @@
-﻿using SantasToolbox;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,9 +52,9 @@ namespace Day20_ImageTiles
             return count;
         }
 
-        public int CountImageWithinImage(ImageMask mask)
+        public List<(int x, int y)> FindMaskWithinImage(ImageMask mask)
         {
-            int monstersFound = 0;
+            var list = new List<(int x, int y)>();
 
             for (int baseY = 0; baseY < this.Size - mask.Height; baseY++)
             {
@@ -77,60 +76,34 @@ namespace Day20_ImageTiles
 
                     if (foundMonster)
                     {
-                        monstersFound++;
+                        list.Add((baseX, baseY));
                     }
                 }
             }
 
-            return monstersFound;
+            return list;
         }
 
-        public int PrintImageWithinImage(ImageMask mask, Action<string> printRowAction)
+        public void PrintImageWithinImage(ImageMask mask, IList<(int x, int y)> locations, Action<string> printRowAction)
         {
-            int monstersFound = 0;
+            var dirtyRows = new List<char[]>();
+            dirtyRows.AddRange(this.rows.Select(w => w.ToArray()));
 
-            for (int baseY = 0; baseY < this.Size - mask.Height; baseY++)
+            foreach ((int baseX, int baseY) in locations) 
             {
-                for (int baseX = 0; baseX < this.Size - mask.Width; baseX++)
+                foreach ((int offsetX, int offsetY) in mask.GetMaskedLocations())
                 {
-                    bool foundMonster = true;
-                    this.Reset();
+                    int x = baseX + offsetX;
+                    int y = baseY + offsetY;
 
-                    foreach ((int offsetX, int offsetY) in mask.GetMaskedLocations())
-                    {
-                        int x = baseX + offsetX;
-                        int y = baseY + offsetY;
-
-                        if (this.rows[y][x] != '#')
-                        {
-                            foundMonster = false;
-                            break;
-                            
-                        }
-                    }
-
-                    if (foundMonster)
-                    {
-                        foreach ((int offsetX, int offsetY) in mask.GetMaskedLocations())
-                        {
-                            int x = baseX + offsetX;
-                            int y = baseY + offsetY;
-
-                            this.rows[y][x] = 'O';
-                        }
-
-                        foreach (var row in this.rows)
-                        {
-                            printRowAction(new string(row));
-                        }
-
-                        monstersFound++;
-                    }
+                    dirtyRows[y][x] = 'O';
                 }
             }
 
-            this.Reset();
-            return monstersFound;
+            foreach (var row in dirtyRows)
+            {
+                printRowAction(new string(row));
+            }
         }
 
         protected override void ResetCachedInfo()

@@ -7,14 +7,8 @@ namespace Day20_ImageTiles
 {
     partial class Program
     {
-        static ImageMask seaMonster = new ImageMask();
-
         static void Main(string[] args)
         {
-            seaMonster.AddRow("                  # ");
-            seaMonster.AddRow("#    ##    ##    ###");
-            seaMonster.AddRow(" #  #  #  #  #  #   ");
-
             var parser = new MultiLineParser<ImageTile>(() => new ImageTile(), (tile, row) => tile.AddRow(row));
             using var inputProvider = new InputProvider<ImageTile?>("Input.txt", parser.AddLine)
             {
@@ -42,23 +36,6 @@ namespace Day20_ImageTiles
 
             var sideLength = (int)Math.Sqrt(tiles.Count);
 
-            // debug, printing ids
-            //for (int x = 0; x < sideLength; x++)
-            //{
-            //    for (int y = 0; y < sideLength; y++)
-            //    {
-            //        if (workingGrid.ContainsKey((x, y)))
-            //        {
-            //            Console.Write($" {workingGrid[(x, y)].Id} ");
-            //        }
-            //        else
-            //        {
-            //            Console.WriteLine(" ____ ");
-            //        }
-            //    }
-            //    Console.WriteLine();
-            //}
-
             var fullImage = new Image(sideLength, cornerTiles[0]);
             for (int x = 0; x < sideLength; x++)
             {
@@ -67,6 +44,11 @@ namespace Day20_ImageTiles
                     fullImage.Insert(grid[(x, y)], x, y);
                 }
             }
+
+            var seaMonster = new ImageMask();
+            seaMonster.AddRow("                  # ");
+            seaMonster.AddRow("#    ##    ##    ###");
+            seaMonster.AddRow(" #  #  #  #  #  #   ");
 
             int maxCount = 0;
             for (int config = 0; config < 4; config++)
@@ -77,24 +59,19 @@ namespace Day20_ImageTiles
                 {
                     fullImage.SetRotateSteps(rotation);
 
-                    //Console.Clear();
-                    //for (int y = 0; y < fullImage.Size; y++)
-                    //{
-                    //    Console.WriteLine(fullImage.GetRow(y));
-                    //}
-
-                    var count = fullImage.CountImageWithinImage(seaMonster);
-                    if (count > maxCount)
+                    var monsters = fullImage.FindMaskWithinImage(seaMonster);
+                    if (monsters.Count > maxCount)
                     {
-                        maxCount = count;
+                        Console.Clear();
+
+                        maxCount = monsters.Count;
 
                         int total = fullImage.Count(w => w == '#');
-                        int minusSeaMonster = total - count * seaMonster.MaskedLocationsCount;
-                        Console.WriteLine($"Part 2: {minusSeaMonster}");
+                        int minusSeaMonster = total - monsters.Count * seaMonster.MaskedLocationsCount;
+                        Console.WriteLine($"Part 2: Found {monsters.Count} monsters, marked tiles without monsters: {minusSeaMonster}");
 
-                        // debug
-                        //Console.Clear();
-                        //fullImage.PrintImageWithinImage(seaMonster, Console.WriteLine);
+                        Console.WriteLine();
+                        fullImage.PrintImageWithinImage(seaMonster, monsters, Console.WriteLine);
                     }
                 }
             }
