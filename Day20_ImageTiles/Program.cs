@@ -134,35 +134,51 @@ namespace Day20_ImageTiles
 
                 for (int topLeftCornerArrangement = 0; topLeftCornerArrangement < 4; topLeftCornerArrangement++)
                 {
+                    topLeft.UnFreeze();
                     topLeft.SetIntoConfig(topLeftCornerArrangement);
+                    topLeft.Freeze();
 
                     for (int topRightCornerArrangement = 0; topRightCornerArrangement < 4; topRightCornerArrangement++)
                     {
+                        topRight.UnFreeze();
                         topRight.SetIntoConfig(topRightCornerArrangement);
+                        topRight.Freeze();
 
                         for (int bottomLeftCornerArrangement = 0; bottomLeftCornerArrangement < 4; bottomLeftCornerArrangement++)
                         {
+                            bottomLeft.UnFreeze();
                             bottomLeft.SetIntoConfig(bottomLeftCornerArrangement);
+                            bottomLeft.Freeze();
 
                             for (int bottomRightCornerArrangement = 0; bottomRightCornerArrangement < 4; bottomRightCornerArrangement++)
                             {
+                                bottomRight.UnFreeze();
                                 bottomRight.SetIntoConfig(bottomRightCornerArrangement);
+                                bottomRight.Freeze();
 
                                 for (int topLeftCornerRotation = 0; topLeftCornerRotation < 4; topLeftCornerRotation++)
                                 {
+                                    topLeft.UnFreeze();
                                     topLeft.Rotate90();
+                                    topLeft.Freeze();
 
                                     for (int topRightCornerRotation = 0; topRightCornerRotation < 4; topRightCornerRotation++)
                                     {
+                                        topRight.UnFreeze();
                                         topRight.Rotate90();
+                                        topRight.Freeze();
 
                                         for (int bottomLeftCornerRotation = 0; bottomLeftCornerRotation < 4; bottomLeftCornerRotation++)
                                         {
+                                            bottomLeft.UnFreeze();
                                             bottomLeft.Rotate90();
+                                            bottomLeft.Freeze();
 
                                             for (int bottomRightCornerRotation = 0; bottomRightCornerRotation < 4; bottomRightCornerRotation++)
                                             {
+                                                bottomRight.UnFreeze();
                                                 bottomRight.Rotate90();
+                                                bottomRight.Freeze();
 
                                                 var workingPosInGrid = posInGrid.ToDictionary(w => w.Key, w => w.Value);
                                                 var workingGrid = grid.ToDictionary(w => w.Key, w => w.Value);
@@ -250,6 +266,7 @@ namespace Day20_ImageTiles
 
                 solution.tile.SetIntoConfig(solution.config);
                 solution.tile.SetRotateSteps(solution.rotation);
+                solution.tile.Freeze();
 
                 if (AttemptFillGrid(workingPosInGrid, workingGrid, workingAlignedTiles, workingTilesToAlign, neighbourhood, alreadyVisited))
                 {
@@ -257,6 +274,10 @@ namespace Day20_ImageTiles
                     grid[(solution.x, solution.y)] = solution.tile;
 
                     return true;
+                }
+                else
+                {
+                    solution.tile.UnFreeze();
                 }
             }
 
@@ -373,6 +394,7 @@ namespace Day20_ImageTiles
             private int rotation = 0;
             private bool isFlippedHorizontally = false;
             private bool isFlippedVerticallly = false;
+            private bool isFrozen = false;
 
             public ImageTile()
             {
@@ -395,14 +417,28 @@ namespace Day20_ImageTiles
                 }
             }
 
+            public void Freeze()
+            {
+                this.isFrozen = true;
+            }
+
+            public void UnFreeze()
+            {
+                this.isFrozen = false;
+            }
+
             public void Rotate90()
             {
+                if (this.isFrozen) throw new Exception();
+
                 this.rotation++;
                 this.ResetLines();
             }
 
             public void SetRotateSteps(int steps)
             {
+                if (this.isFrozen) throw new Exception();
+
                 this.rotation = steps;
                 this.ResetLines();
             }
@@ -411,6 +447,8 @@ namespace Day20_ImageTiles
 
             public void Reset()
             {
+                if (this.isFrozen) throw new Exception();
+
                 if (this.isFlippedHorizontally)
                 {
                     this.FlipHorizontal();
@@ -427,6 +465,7 @@ namespace Day20_ImageTiles
 
             public void SetIntoConfig(int config)
             {
+                if (this.isFrozen) throw new Exception();
                 this.Reset();
 
                 if (config == 1)
@@ -444,8 +483,12 @@ namespace Day20_ImageTiles
                 }
             }
 
-            public void FlipHorizontal()
+            public override string ToString() => this.Id.ToString();
+
+            private void FlipHorizontal()
             {
+                if (this.isFrozen) throw new Exception();
+
                 var flippedRows = new List<string>();
 
                 for (int i = 0; i < this.rows.Count; i++)
@@ -460,13 +503,11 @@ namespace Day20_ImageTiles
                 this.isFlippedHorizontally = !this.isFlippedHorizontally;
             }
 
-            public void FlipVertical()
+            private void FlipVertical()
             {
                 this.rows.Reverse();
                 this.isFlippedVerticallly = !this.isFlippedVerticallly;
             }
-
-            public override string ToString() => this.Id.ToString();
 
             private void SetId(string row)
             {
