@@ -31,6 +31,23 @@ namespace Day20_ImageTiles
             Console.WriteLine($"Part 1: {factorOfCornerTileIds}");
 
             var workingGrid = AssembleTilesToImage(cornerTiles[0], tiles, neighbourhood);
+
+            var sideLength = (int)Math.Sqrt(tiles.Count);
+            for (int x = 0; x < sideLength; x++)
+            {
+                for (int y = 0; y < sideLength; y++)
+                {
+                    if (workingGrid.ContainsKey((x, y)))
+                    {
+                        Console.Write($" {workingGrid[(x, y)].Id} ");
+                    }
+                    else
+                    {
+                        Console.WriteLine(" ____ ");
+                    }
+                }
+                Console.WriteLine();
+            }
         }
 
         private static Dictionary<ImageTile, IList<ImageTile>> FindNeighbouringTiles(IList<ImageTile> tiles)
@@ -110,15 +127,15 @@ namespace Day20_ImageTiles
                     var workingPosInGrid = posInGrid.ToDictionary(w => w.Key, w => w.Value);
                     var workingGrid = grid.ToDictionary(w => w.Key, w => w.Value);
 
-                    var tile = tiles.First(w => w.Id == 2311);
-                    var placesToPut = new HashSet<(ImageTile tile, int x, int y, int config, int rotation)>();
-                    var additions = FindOrientationsForTile(tile, workingGrid, placesToPut, new[] { (0, 1)});
+                    //var tile = tiles.First(w => w.Id == 2311);
+                    //var placesToPut = new HashSet<(ImageTile tile, int x, int y, int config, int rotation)>();
+                    //var additions = FindOrientationsForTile(tile, workingGrid, placesToPut, new[] { (0, 1)});
 
-                    //var nodes = new List<(int id, int x, int y, int config, int rotation)>();
-                    //if (AttemptFillGrid(workingPosInGrid, workingGrid, neighbourhood, nodes, IsValidLocation))
-                    //{
-                    //    return workingGrid;
-                    //}
+                    var nodes = new List<(int id, int x, int y, int config, int rotation)>();
+                    if (AttemptFillGrid(workingPosInGrid, workingGrid, neighbourhood, nodes, IsValidLocation))
+                    {
+                        return workingGrid;
+                    }
                 }
             }
 
@@ -219,8 +236,6 @@ namespace Day20_ImageTiles
         private static int FindOrientationsForTile(ImageTile tile, Dictionary<(int x, int y), ImageTile> grid, HashSet<(ImageTile tile, int x, int y, int config, int rotation)> placesToPut, IList<(int x, int y)> tilesToFill)
         {
             int addition = 0;
-
-            var target = grid.Values.First();
 
             foreach ((int x, int y) in tilesToFill)
             {

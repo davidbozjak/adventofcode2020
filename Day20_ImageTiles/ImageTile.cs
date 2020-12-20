@@ -35,6 +35,7 @@ namespace Day20_ImageTiles
             private bool isFlippedHorizontally = false;
             private bool isFlippedVerticallly = false;
             private bool isFrozen = false;
+            private int sideLength = 0;
 
             public ImageTile()
             {
@@ -52,7 +53,9 @@ namespace Day20_ImageTiles
                 }
                 else
                 {
+                    this.originalRows.Add(row);
                     this.rows.Add(row);
+                    this.sideLength++;
                     this.ResetLines();
                 }
             }
@@ -72,6 +75,19 @@ namespace Day20_ImageTiles
                 if (this.isFrozen) throw new Exception();
 
                 this.rotation++;
+                while (this.rotation < 0) this.rotation += 4;
+                while (this.rotation >= 4) this.rotation -= 4;
+
+                var newRows = new List<string>();
+
+                for (int i = 0; i < this.rows.Count; i++)
+                {
+                    newRows.Add(GetColumn(i));
+                }
+
+                this.rows.Clear();
+                this.rows.AddRange(newRows);
+
                 this.ResetLines();
             }
 
@@ -79,7 +95,14 @@ namespace Day20_ImageTiles
             {
                 if (this.isFrozen) throw new Exception();
 
-                this.rotation = steps;
+                while (steps < 0) steps += 4;
+                while (steps >= 4) steps -= 4;
+
+                for (int i = this.rotation; i <= steps; i++)
+                {
+                    this.Rotate90();
+                }
+
                 this.ResetLines();
             }
 
@@ -87,17 +110,8 @@ namespace Day20_ImageTiles
 
             public void Reset()
             {
-                if (this.isFrozen) throw new Exception();
-
-                if (this.isFlippedHorizontally)
-                {
-                    this.FlipHorizontal();
-                }
-
-                if (this.isFlippedVerticallly)
-                {
-                    this.FlipVertical();
-                }
+                this.rows.Clear();
+                this.rows.AddRange(this.originalRows);
 
                 this.rotation = 0;
                 this.ResetLines();
@@ -106,6 +120,7 @@ namespace Day20_ImageTiles
             public void SetIntoConfig(int config)
             {
                 if (this.isFrozen) throw new Exception();
+                
                 this.Reset();
 
                 if (config == 1)
@@ -175,27 +190,28 @@ namespace Day20_ImageTiles
 
             private string GetEdgeString(Edge edge)
             {
-                var edgeAfterTotation = this.rotation + edge;
-                while ((int)edgeAfterTotation > 4) edgeAfterTotation -= 4;
-                while ((int)edgeAfterTotation <= 0) edgeAfterTotation += 4;
-
-                if (edgeAfterTotation == Edge.Top)
+                if (edge == Edge.Top)
                 {
                     return this.rows[0];
                 }
-                else if (edgeAfterTotation == Edge.Bottom)
+                else if (edge == Edge.Bottom)
                 {
                     return this.rows.Last();
                 }
-                else if (edgeAfterTotation == Edge.Left)
+                else if (edge == Edge.Left)
                 {
-                    return new string(this.rows.Select(w => w[0]).ToArray());
+                    return GetColumn(0);
                 }
-                else if (edgeAfterTotation == Edge.Right)
+                else if (edge == Edge.Right)
                 {
-                    return new string(this.rows.Select(w => w[^1]).ToArray());
+                    return GetColumn(this.sideLength - 1);
                 }
                 else throw new Exception();
+            }
+
+            private string GetColumn(int column)
+            {
+                return new string(this.rows.Select(w => w[column]).ToArray());
             }
 
             private void ResetLines()
