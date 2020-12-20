@@ -50,7 +50,7 @@ namespace Day20_ImageTiles
             seaMonster.AddRow("#    ##    ##    ###");
             seaMonster.AddRow(" #  #  #  #  #  #   ");
 
-            int maxCount = 0;
+            List<(int x, int y)>? monstersFound = null;
             for (int config = 0; config < 4; config++)
             {
                 fullImage.SetIntoConfig(config);
@@ -60,21 +60,21 @@ namespace Day20_ImageTiles
                     fullImage.SetRotateSteps(rotation);
 
                     var monsters = fullImage.FindMaskWithinImage(seaMonster);
-                    if (monsters.Count > maxCount)
+                    if (monsters.Count > (monstersFound?.Count ?? 0))
                     {
-                        Console.Clear();
-
-                        maxCount = monsters.Count;
-
-                        int total = fullImage.Count(w => w == '#');
-                        int minusSeaMonster = total - monsters.Count * seaMonster.MaskedLocationsCount;
-                        Console.WriteLine($"Part 2: Found {monsters.Count} monsters, marked tiles without monsters: {minusSeaMonster}");
-
-                        Console.WriteLine();
-                        fullImage.PrintImageWithinImage(seaMonster, monsters, Console.WriteLine);
+                        monstersFound = monsters;
                     }
                 }
             }
+
+            if (monstersFound == null) throw new Exception();
+
+            int total = fullImage.Count(w => w == '#');
+            int minusSeaMonster = total - monstersFound.Count * seaMonster.MaskedLocationsCount;
+            Console.WriteLine($"Part 2: Found {monstersFound.Count} monsters, marked tiles without monsters: {minusSeaMonster}");
+
+            Console.WriteLine();
+            fullImage.PrintImageWithinImage(seaMonster, monstersFound, Console.WriteLine);
         }
 
         private static Dictionary<ImageTile, IList<ImageTile>> FindNeighbouringTiles(IList<ImageTile> tiles)
