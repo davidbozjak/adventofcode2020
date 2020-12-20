@@ -153,7 +153,7 @@ namespace Day20_ImageTiles
             return null;
         }
 
-        private static bool AttemptFillGrid(Dictionary<ImageTile, (int x, int y)> posInGrid, Dictionary<(int x, int y), ImageTile> grid/*, List<ImageTile> alignedTiles, List<ImageTile> tilesToAlign*/, Dictionary<ImageTile, IList<ImageTile>> neighbourhood, IList<(int id, int x, int y, int config, int rotation)> alreadyVisited)
+        private static bool AttemptFillGrid(Dictionary<ImageTile, (int x, int y)> posInGrid, Dictionary<(int x, int y), ImageTile> grid, Dictionary<ImageTile, IList<ImageTile>> neighbourhood, IList<(int id, int x, int y, int config, int rotation)> alreadyVisited)
         {
             var placesToPut = new HashSet<(ImageTile tile, int x, int y, int config, int rotation)>();
 
@@ -227,8 +227,17 @@ namespace Day20_ImageTiles
 
                 if (AttemptFillGrid(workingPosInGrid, workingGrid, neighbourhood, alreadyVisited))
                 {
-                    posInGrid[solution.tile] = (solution.x, solution.y);
-                    grid[(solution.x, solution.y)] = solution.tile;
+                    foreach (var key in workingPosInGrid.Keys)
+                    {
+                        if (!posInGrid.ContainsKey(key))
+                            posInGrid.Add(key, workingPosInGrid[key]);
+                    }
+
+                    foreach (var key in workingGrid.Keys)
+                    {
+                        if (!grid.ContainsKey(key))
+                            grid.Add(key, workingGrid[key]);
+                    }
 
                     return true;
                 }
