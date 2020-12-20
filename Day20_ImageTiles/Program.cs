@@ -7,8 +7,14 @@ namespace Day20_ImageTiles
 {
     partial class Program
     {
+        static ImageMask seaMonster = new ImageMask();
+
         static void Main(string[] args)
         {
+            seaMonster.AddRow("                  # ");
+            seaMonster.AddRow("#    ##    ##    ###");
+            seaMonster.AddRow(" #  #  #  #  #  #   ");
+
             var parser = new MultiLineParser<ImageTile>(() => new ImageTile(), (tile, row) => tile.AddRow(row));
             using var inputProvider = new InputProvider<ImageTile?>("Input.txt", parser.AddLine)
             {
@@ -30,23 +36,67 @@ namespace Day20_ImageTiles
 
             Console.WriteLine($"Part 1: {factorOfCornerTileIds}");
 
-            var workingGrid = AssembleTilesToImage(cornerTiles[0], tiles, neighbourhood);
+            var grid = AssembleTilesToImage(cornerTiles[0], tiles, neighbourhood);
+
+            if (grid == null) throw new Exception();
 
             var sideLength = (int)Math.Sqrt(tiles.Count);
+
+            // debug, printing ids
+            //for (int x = 0; x < sideLength; x++)
+            //{
+            //    for (int y = 0; y < sideLength; y++)
+            //    {
+            //        if (workingGrid.ContainsKey((x, y)))
+            //        {
+            //            Console.Write($" {workingGrid[(x, y)].Id} ");
+            //        }
+            //        else
+            //        {
+            //            Console.WriteLine(" ____ ");
+            //        }
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            var fullImage = new Image(sideLength, cornerTiles[0]);
             for (int x = 0; x < sideLength; x++)
             {
                 for (int y = 0; y < sideLength; y++)
                 {
-                    if (workingGrid.ContainsKey((x, y)))
+                    fullImage.Insert(grid[(x, y)], x, y);
+                }
+            }
+
+            int maxCount = 0;
+            for (int config = 0; config < 4; config++)
+            {
+                fullImage.SetIntoConfig(config);
+
+                for (int rotation = 0; rotation < 4; rotation++)
+                {
+                    fullImage.SetRotateSteps(rotation);
+
+                    //Console.Clear();
+                    //for (int y = 0; y < fullImage.Size; y++)
+                    //{
+                    //    Console.WriteLine(fullImage.GetRow(y));
+                    //}
+
+                    var count = fullImage.CountImageWithinImage(seaMonster);
+                    if (count > maxCount)
                     {
-                        Console.Write($" {workingGrid[(x, y)].Id} ");
-                    }
-                    else
-                    {
-                        Console.WriteLine(" ____ ");
+                        maxCount = count;
+
+                        int total = fullImage.Count(w => w == '#');
+                        int minusSeaMonster = total - count * seaMonster.MaskedLocationsCount;
+                        Console.WriteLine($"Part 2: {minusSeaMonster}");
+
+                        // debug
+                        //Console.Clear();
+                        //fullImage.PrintImageWithinImage(seaMonster, Console.WriteLine);
                     }
                 }
-                Console.WriteLine();
             }
         }
 
@@ -114,22 +164,18 @@ namespace Day20_ImageTiles
 
             for (int config = 0; config < 4; config++)
             {
-                topLeft.UnFreeze();
+                //topLeft.UnFreeze();
                 topLeft.SetIntoConfig(config);
-                topLeft.Freeze();
+                //topLeft.Freeze();
 
                 for (int rotation = 0; rotation < 4; rotation++)
                 {
-                    topLeft.UnFreeze();
+                    //topLeft.UnFreeze();
                     topLeft.SetRotateSteps(rotation);
-                    topLeft.Freeze();
+                    //topLeft.Freeze();
 
                     var workingPosInGrid = posInGrid.ToDictionary(w => w.Key, w => w.Value);
                     var workingGrid = grid.ToDictionary(w => w.Key, w => w.Value);
-
-                    //var tile = tiles.First(w => w.Id == 2311);
-                    //var placesToPut = new HashSet<(ImageTile tile, int x, int y, int config, int rotation)>();
-                    //var additions = FindOrientationsForTile(tile, workingGrid, placesToPut, new[] { (0, 1)});
 
                     var nodes = new List<(int id, int x, int y, int config, int rotation)>();
                     if (AttemptFillGrid(workingPosInGrid, workingGrid, neighbourhood, nodes, IsValidLocation))
@@ -196,7 +242,7 @@ namespace Day20_ImageTiles
 
                 solution.tile.SetIntoConfig(solution.config);
                 solution.tile.SetRotateSteps(solution.rotation);
-                solution.tile.Freeze();
+                //solution.tile.Freeze();
 
                 if (AttemptFillGrid(workingPosInGrid, workingGrid, neighbourhood, alreadyVisited, locationValidator))
                 {
@@ -214,10 +260,10 @@ namespace Day20_ImageTiles
 
                     return true;
                 }
-                else
-                {
-                    solution.tile.UnFreeze();
-                }
+                //else
+                //{
+                //    solution.tile.UnFreeze();
+                //}
             }
 
             return false;
