@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day18_ExpressionEvaluation"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day19_Grammar", "Day19_Grammar\Day19_Grammar.csproj", "{089B3120-A235-4E64-9975-7720C2941FC3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day20_ImageTiles", "Day20_ImageTiles\Day20_ImageTiles.csproj", "{C655C754-6083-45FC-BEBC-F1531F634339}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{089B3120-A235-4E64-9975-7720C2941FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{089B3120-A235-4E64-9975-7720C2941FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{089B3120-A235-4E64-9975-7720C2941FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C655C754-6083-45FC-BEBC-F1531F634339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C655C754-6083-45FC-BEBC-F1531F634339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C655C754-6083-45FC-BEBC-F1531F634339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C655C754-6083-45FC-BEBC-F1531F634339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
