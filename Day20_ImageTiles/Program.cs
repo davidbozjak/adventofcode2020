@@ -18,7 +18,9 @@ namespace Day20_ImageTiles
             var inputs = inputProvider.ToList();
             var tiles = inputs.Where(w => w != null).Cast<ImageTile>().ToList();
 
-            var cornerTiles = GetCornerTiles(tiles);
+            var neighbourhood = FindNeighbouringTiles(tiles);
+
+            var cornerTiles = neighbourhood.Where(w => w.Value.Count == 2).Select(w => w.Key).ToList();
 
             long factorOfCornerTileIds = 1;
             foreach (var cornerTile in cornerTiles)
@@ -31,15 +33,14 @@ namespace Day20_ImageTiles
             AssembleTilesToImage(tiles, cornerTiles);
         }
 
-        private static IList<ImageTile> GetCornerTiles(IList<ImageTile> tiles)
+        private static Dictionary<ImageTile, IList<ImageTile>> FindNeighbouringTiles(IList<ImageTile> tiles)
         {
-            var cornerTiles = new List<ImageTile>();
+            var neighbourhood = new Dictionary<ImageTile, IList<ImageTile>>();
 
             foreach (var tile in tiles)
             {
                 tile.Reset();
-
-                int foundNeighbours = 0;
+                var neighbours = new List<ImageTile>();
 
                 foreach (var potentialN in tiles)
                 {
@@ -47,20 +48,17 @@ namespace Day20_ImageTiles
 
                     if (ArePotentialNeighbours(tile, potentialN))
                     {
-                        foundNeighbours++;
+                        neighbours.Add(potentialN);
                     }
                 }
 
-                if (foundNeighbours < 1 || foundNeighbours > 4)
+                if (neighbours.Count < 1 || neighbours.Count > 4)
                     throw new Exception();
 
-                if (foundNeighbours == 2)
-                {
-                    cornerTiles.Add(tile);
-                }
+                neighbourhood.Add(tile, neighbours);
             }
 
-            return cornerTiles;
+            return neighbourhood;
         }
 
         private static bool ArePotentialNeighbours(ImageTile tile1, ImageTile tile2)
