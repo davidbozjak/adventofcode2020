@@ -30,7 +30,7 @@ namespace Day20_ImageTiles
 
             Console.WriteLine($"Part 1: {factorOfCornerTileIds}");
 
-            AssembleTilesToImage(tiles, cornerTiles);
+            AssembleTilesToImage(tiles, cornerTiles, neighbourhood);
         }
 
         private static Dictionary<ImageTile, IList<ImageTile>> FindNeighbouringTiles(IList<ImageTile> tiles)
@@ -59,32 +59,32 @@ namespace Day20_ImageTiles
             }
 
             return neighbourhood;
-        }
 
-        private static bool ArePotentialNeighbours(ImageTile tile1, ImageTile tile2)
-        {
-            for (int config = 0; config < 4; config++)
+            static bool ArePotentialNeighbours(ImageTile tile1, ImageTile tile2)
             {
-                tile2.SetIntoConfig(config);
-
-                for (int i = 0; i < 4; i++)
+                for (int config = 0; config < 4; config++)
                 {
-                    if (tile1.TopLine == tile2.BottomLine ||
-                        tile1.BottomLine == tile2.TopLine ||
-                        tile1.LeftLine == tile2.RightLine ||
-                        tile1.RightLine == tile2.LeftLine)
+                    tile2.SetIntoConfig(config);
+
+                    for (int i = 0; i < 4; i++)
                     {
-                        return true;
+                        if (tile1.TopLine == tile2.BottomLine ||
+                            tile1.BottomLine == tile2.TopLine ||
+                            tile1.LeftLine == tile2.RightLine ||
+                            tile1.RightLine == tile2.LeftLine)
+                        {
+                            return true;
+                        }
+
+                        tile2.Rotate90();
                     }
-
-                    tile2.Rotate90();
                 }
-            }
 
-            return false;
+                return false;
+            }
         }
 
-        private static Dictionary<(int x, int y), ImageTile>? AssembleTilesToImage(IList<ImageTile> tiles, IList<ImageTile> cornerTiles)
+        private static Dictionary<(int x, int y), ImageTile>? AssembleTilesToImage(IList<ImageTile> tiles, IList<ImageTile> cornerTiles, Dictionary<ImageTile, IList<ImageTile>> neighbourhood)
         {
             int sideLength = (int)Math.Sqrt(tiles.Count) - 1;
             var topLeftPos = (0, 0);
@@ -92,7 +92,19 @@ namespace Day20_ImageTiles
             var bottomLeftPos = (0, sideLength);
             var bottomRightPos = (sideLength, sideLength);
 
-            var arrangements = cornerTiles.GetAllOrdersOfList().ToList();
+            //var arrangements = cornerTiles.GetAllOrdersOfList().ToList();
+
+            // Temp get just the right ID to confirm it works
+            List<List<ImageTile>> arrangements = new List<List<ImageTile>>
+            {
+                new List<ImageTile>()
+                {
+                    tiles.First(w => w.Id == 1951),
+                    tiles.First(w => w.Id == 3079),
+                    tiles.First(w => w.Id == 2971),
+                    tiles.First(w => w.Id == 1171)
+                }
+            };
 
             for (int i = 0; i < arrangements.Count; i++)
             {
@@ -158,7 +170,7 @@ namespace Day20_ImageTiles
                                                 var workingTilesToAlign = tilesToAlign.ToList();
 
                                                 var nodes = new List<(int id, int x, int y, int config, int rotation)>();
-                                                if (AttemptFillGrid(workingPosInGrid, workingGrid, workingAlignedTiles, workingTilesToAlign, nodes))
+                                                if (AttemptFillGrid(workingPosInGrid, workingGrid, workingAlignedTiles, workingTilesToAlign, neighbourhood, nodes))
                                                 {
                                                     return workingGrid;
                                                 }
@@ -175,7 +187,7 @@ namespace Day20_ImageTiles
             return null;
         }
 
-        private static bool AttemptFillGrid(Dictionary<ImageTile, (int x, int y)> posInGrid, Dictionary<(int x, int y), ImageTile> grid, List<ImageTile> alignedTiles, List<ImageTile> tilesToAlign, IList<(int id, int x, int y, int config, int rotation)> alreadyVisited)
+        private static bool AttemptFillGrid(Dictionary<ImageTile, (int x, int y)> posInGrid, Dictionary<(int x, int y), ImageTile> grid, List<ImageTile> alignedTiles, List<ImageTile> tilesToAlign, Dictionary<ImageTile, IList<ImageTile>> neighbourhood, IList<(int id, int x, int y, int config, int rotation)> alreadyVisited)
         {
             if (tilesToAlign.Count == 0)
             {
@@ -193,94 +205,27 @@ namespace Day20_ImageTiles
                 return true;
             }
 
-            var placesToPut = new List<(ImageTile tile, int x, int y, int config, int rotation)>();
+            var placesToPut = new HashSet<(ImageTile tile, int x, int y, int config, int rotation)>();
 
-            for (int i = 0; i < tilesToAlign.Count; i++)
-            {
-                var tile = tilesToAlign[i];
-                
-                for (int config = 0; config < 4; config++)
+            var potentialTilesToPlace = posInGrid.Keys
+                .SelectMany(w => neighbourhood[w])
+                .ToHashSet()
+                .Where(w => !posInGrid.ContainsKey(w))
+                .ToList();
+
+            for (int i = 0; i < potentialTilesToPlace.Count; i++)
+            {   
+                var tile = potentialTilesToPlace[i];
+
+                var neighbours = neighbourhood[tile];
+                var neighboursInGrid = neighbours.Where(w => posInGrid.ContainsKey(w)).ToList();
+
+                int additions = FindOrientationsForTile(tile, posInGrid, grid, placesToPut, neighboursInGrid);
+
+                if (additions == 0)
                 {
-                    tile.SetIntoConfig(config);
-
-                    for (int rotation = 0; rotation < 4; rotation++)
-                    {
-                        tile.Rotate90();
-
-                        int x, y;
-
-                        foreach (var at in alignedTiles)
-                        {
-                            if (tile.TopLine == at.BottomLine)
-                            {
-                                x = posInGrid[at].x;
-                                y = posInGrid[at].y + 1;
-                            }
-                            else if (tile.BottomLine == at.TopLine)
-                            {
-                                x = posInGrid[at].x;
-                                y = posInGrid[at].y - 1;
-                            }
-                            else if (tile.LeftLine == at.RightLine)
-                            {
-                                x = posInGrid[at].x + 1;
-                                y = posInGrid[at].y;
-                            }
-                            else if (tile.RightLine == at.LeftLine)
-                            {
-                                x = posInGrid[at].x - 1;
-                                y = posInGrid[at].y;
-                            }
-                            else continue;
-
-                            // temp, just to check how much it would speed up
-                            if (x < 0) continue;
-                            if (y < 0) continue;
-                            if (x >= 3) continue;
-                            if (y >= 3) continue;
-
-                            if (grid.ContainsKey((x, y)))
-                            {
-                                // think more what to do here
-                                continue;
-                            }
-
-                            var leftPos = (x - 1, y);
-                            if (grid.ContainsKey(leftPos))
-                            {
-                                var leftTile = grid[leftPos];
-                                if (tile.LeftLine != leftTile.RightLine)
-                                    continue;
-                            }
-
-                            var rightPos = (x + 1, y);
-                            if (grid.ContainsKey(rightPos))
-                            {
-                                var rightTile = grid[rightPos];
-                                if (tile.RightLine != rightTile.LeftLine)
-                                    continue;
-                            }
-
-                            var belowPos = (x, y + 1);
-                            if (grid.ContainsKey(belowPos))
-                            {
-                                var belowTile = grid[belowPos];
-                                if (tile.BottomLine != belowTile.TopLine)
-                                    continue;
-                            }
-
-                            var abovePos = (x, y - 1);
-                            if (grid.ContainsKey(abovePos))
-                            {
-                                var aboveTile = grid[abovePos];
-                                if (tile.TopLine != aboveTile.BottomLine)
-                                    continue;
-                            }
-
-                            //we know we found match
-                            placesToPut.Add((tile, x, y, config, rotation));
-                        }
-                    }
+                    // we were unable to place a neighour. This is not the right branch.
+                    return false;
                 }
             }
 
@@ -306,7 +251,7 @@ namespace Day20_ImageTiles
                 solution.tile.SetIntoConfig(solution.config);
                 solution.tile.SetRotateSteps(solution.rotation);
 
-                if (AttemptFillGrid(workingPosInGrid, workingGrid, workingAlignedTiles, workingTilesToAlign, alreadyVisited))
+                if (AttemptFillGrid(workingPosInGrid, workingGrid, workingAlignedTiles, workingTilesToAlign, neighbourhood, alreadyVisited))
                 {
                     posInGrid[solution.tile] = (solution.x, solution.y);
                     grid[(solution.x, solution.y)] = solution.tile;
@@ -316,6 +261,97 @@ namespace Day20_ImageTiles
             }
 
             return false;
+        }
+
+        private static int FindOrientationsForTile(ImageTile tile, Dictionary<ImageTile, (int x, int y)> posInGrid, Dictionary<(int x, int y), ImageTile> grid, HashSet<(ImageTile tile, int x, int y, int config, int rotation)> placesToPut, List<ImageTile> neighboursInGrid)
+        {
+            int additions = 0;
+
+            for (int config = 0; config < 4; config++)
+            {
+                tile.SetIntoConfig(config);
+
+                for (int rotation = 0; rotation < 4; rotation++)
+                {
+                    tile.Rotate90();
+
+                    int x, y;
+                    foreach (var at in neighboursInGrid)
+                    {
+                        if (tile.TopLine == at.BottomLine)
+                        {
+                            x = posInGrid[at].x;
+                            y = posInGrid[at].y + 1;
+                        }
+                        else if (tile.BottomLine == at.TopLine)
+                        {
+                            x = posInGrid[at].x;
+                            y = posInGrid[at].y - 1;
+                        }
+                        else if (tile.LeftLine == at.RightLine)
+                        {
+                            x = posInGrid[at].x + 1;
+                            y = posInGrid[at].y;
+                        }
+                        else if (tile.RightLine == at.LeftLine)
+                        {
+                            x = posInGrid[at].x - 1;
+                            y = posInGrid[at].y;
+                        }
+                        else continue;
+
+                        // temp, just to check how much it would speed up
+                        if (x < 0) continue;
+                        if (y < 0) continue;
+                        if (x >= 3) continue;
+                        if (y >= 3) continue;
+
+                        if (grid.ContainsKey((x, y)))
+                        {
+                            // think more what to do here
+                            continue;
+                        }
+
+                        var leftPos = (x - 1, y);
+                        if (grid.ContainsKey(leftPos))
+                        {
+                            var leftTile = grid[leftPos];
+                            if (tile.LeftLine != leftTile.RightLine)
+                                continue;
+                        }
+
+                        var rightPos = (x + 1, y);
+                        if (grid.ContainsKey(rightPos))
+                        {
+                            var rightTile = grid[rightPos];
+                            if (tile.RightLine != rightTile.LeftLine)
+                                continue;
+                        }
+
+                        var belowPos = (x, y + 1);
+                        if (grid.ContainsKey(belowPos))
+                        {
+                            var belowTile = grid[belowPos];
+                            if (tile.BottomLine != belowTile.TopLine)
+                                continue;
+                        }
+
+                        var abovePos = (x, y - 1);
+                        if (grid.ContainsKey(abovePos))
+                        {
+                            var aboveTile = grid[abovePos];
+                            if (tile.TopLine != aboveTile.BottomLine)
+                                continue;
+                        }
+
+                        //we know we found match
+                        placesToPut.Add((tile, x, y, config, tile.Rotation));
+                        additions++;
+                    }
+                }
+            }
+
+            return additions;
         }
 
         class ImageTile
@@ -370,6 +406,8 @@ namespace Day20_ImageTiles
                 this.rotation = steps;
                 this.ResetLines();
             }
+
+            public int Rotation => this.rotation;
 
             public void Reset()
             {
@@ -427,6 +465,8 @@ namespace Day20_ImageTiles
                 this.rows.Reverse();
                 this.isFlippedVerticallly = !this.isFlippedVerticallly;
             }
+
+            public override string ToString() => this.Id.ToString();
 
             private void SetId(string row)
             {
