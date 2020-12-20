@@ -141,15 +141,11 @@ namespace Day20_ImageTiles
 
             for (int config = 0; config < 4; config++)
             {
-                //topLeft.UnFreeze();
                 topLeft.SetIntoConfig(config);
-                //topLeft.Freeze();
 
                 for (int rotation = 0; rotation < 4; rotation++)
                 {
-                    //topLeft.UnFreeze();
                     topLeft.SetRotateSteps(rotation);
-                    //topLeft.Freeze();
 
                     var workingPosInGrid = posInGrid.ToDictionary(w => w.Key, w => w.Value);
                     var workingGrid = grid.ToDictionary(w => w.Key, w => w.Value);
@@ -219,7 +215,6 @@ namespace Day20_ImageTiles
 
                 solution.tile.SetIntoConfig(solution.config);
                 solution.tile.SetRotateSteps(solution.rotation);
-                //solution.tile.Freeze();
 
                 if (AttemptFillGrid(workingPosInGrid, workingGrid, neighbourhood, alreadyVisited, locationValidator))
                 {
@@ -237,10 +232,6 @@ namespace Day20_ImageTiles
 
                     return true;
                 }
-                //else
-                //{
-                //    solution.tile.UnFreeze();
-                //}
             }
 
             return false;
