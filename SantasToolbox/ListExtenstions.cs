@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SantasToolbox
 {
@@ -47,6 +48,28 @@ namespace SantasToolbox
                 T temp = sequence[indexA];
                 sequence[indexA] = sequence[indexB];
                 sequence[indexB] = temp;
+            }
+        }
+
+        public static IEnumerable<IList<T>> GetAllOrdersOfList<T>(this IList<T> sequence)
+        {
+            if (sequence.Count == 1) yield return sequence;
+
+            foreach (var element in sequence)
+            {
+                var list = new List<T>();
+                var listWithoutElement = sequence.ToList();
+                listWithoutElement.Remove(element);
+                list.Add(element);
+
+                foreach (var subsequence in listWithoutElement.GetAllOrdersOfList())
+                {
+                    var copyList = list.ToList();
+
+                    copyList.AddRange(subsequence);
+                    yield return copyList;
+                }
+
             }
         }
     }
