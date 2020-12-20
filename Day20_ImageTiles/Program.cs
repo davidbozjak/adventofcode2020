@@ -18,69 +18,226 @@ namespace Day20_ImageTiles
             var inputs = inputProvider.ToList();
             var tiles = inputs.Where(w => w != null).Cast<ImageTile>().ToList();
 
-            AssembleTilesToImage(tiles);
+            var cornerTiles = GetCornerTiles(tiles);
+
+            long factorOfCornerTileIds = 1;
+            foreach (var cornerTile in cornerTiles)
+            {
+                factorOfCornerTileIds *= cornerTile.Id;
+            }
+
+            Console.WriteLine($"Part 1: {factorOfCornerTileIds}");
+
+            //AssembleTilesToImage(tiles);
         }
 
-        private static long AssembleTilesToImage(IEnumerable<ImageTile> tiles)
+        private static IList<ImageTile> GetCornerTiles(IList<ImageTile> tiles)
         {
-            var tilesToAlign = tiles.Skip(1).ToList();
-            var alignedTiles = new List<ImageTile>();
-            alignedTiles.Add(tiles.First());
+            var cornerTiles = new List<ImageTile>();
 
-            while (tilesToAlign.Count > 0)
+            foreach (var tile in tiles)
             {
-                for (int i = 0; i < tilesToAlign.Count; i++)
+                tile.Reset();
+
+                int foundNeighbours = 0;
+
+                foreach (var potentialN in tiles)
                 {
-                    var tile = tilesToAlign[i];
+                    if (tile == potentialN) continue;
 
-                    int transformCount = 0;
-                    long startingTopEdge = tile.TopLine;
-                    bool foundMatch = true;
-                    while (!MatchesAnyAlignedEdge(tile))
+                    potentialN.Reset();
+                    bool couldBeN = false;
+
+                    for (int config = 0; !couldBeN && config < 4; config++)
                     {
-                        transformCount++;
-                        if (transformCount % 4 == 0 || transformCount % 6 == 0)
-                        {
-                            tile.Flip();
-                        }
+                        potentialN.SetIntoConfig(config);
 
-                        tile.Rotate90();
-
-                        // todo: change this to rely only on transformCount
-                        if (tile.TopLine == startingTopEdge)
+                        for (int i = 0; i < 4; i++)
                         {
-                            foundMatch = false;
-                            break;
+                            if (tile.TopLine == potentialN.BottomLine ||
+                                tile.BottomLine == potentialN.TopLine ||
+                                tile.LeftLine == potentialN.RightLine ||
+                                tile.RightLine == potentialN.LeftLine)
+                            {
+                                couldBeN = true;
+                                foundNeighbours++;
+                                break;
+                            }
+
+
+                            potentialN.Rotate90();
                         }
                     }
+                }
 
-                    if (foundMatch)
-                    {
-                        alignedTiles.Add(tile);
-                        tilesToAlign.Remove(tile);
-                    }
+                if (foundNeighbours < 1 || foundNeighbours > 4)
+                    throw new Exception();
+
+                if (foundNeighbours == 2)
+                {
+                    cornerTiles.Add(tile);
                 }
             }
 
-            var topLeftTileCount = alignedTiles
-                .Where(w => !alignedTiles.Any(ww => ww.BottomLine == w.TopLine))
-                .Where(w => !alignedTiles.Any(ww => ww.RightLine == w.LeftLine))
-                .Count();
+            return cornerTiles;
+        }
+
+        private static long AssembleTilesToImage(IList<ImageTile> tiles)
+        {
+            int possibleTileArrangements = 50;
+            for (int startTileTransformCount = 1; startTileTransformCount < possibleTileArrangements; startTileTransformCount++)
+            {
+                var startTile = tiles[0];
+
+                if (startTileTransformCount % 4 == 0 || startTileTransformCount % 6 == 0)
+                {
+                    startTile.FlipHorizontal();
+                }
+
+                startTile.Rotate90();
+
+                //Dictionary<ImageTile, ImageTile> leftOf = new Dictionary<ImageTile, ImageTile>();
+                //Dictionary<ImageTile, ImageTile> rightOf = new Dictionary<ImageTile, ImageTile>();
+                //Dictionary<ImageTile, ImageTile> above = new Dictionary<ImageTile, ImageTile>();
+                //Dictionary<ImageTile, ImageTile> below = new Dictionary<ImageTile, ImageTile>();
+                //Dictionary<ImageTile, int> xPos = new Dictionary<ImageTile, int>();
+                //Dictionary<ImageTile, int> yPos = new Dictionary<ImageTile, int>();
+                Dictionary<ImageTile, (int x, int y)> posInGrid = new Dictionary<ImageTile, (int x, int y)>();
+                Dictionary<(int x, int y), ImageTile> grid = new Dictionary<(int x, int y), ImageTile>();
+
+                var tilesToAlign = tiles.Skip(1).ToList();
+                var alignedTiles = new List<ImageTile>
+                {
+                    startTile
+                };
+                posInGrid[alignedTiles[0]] = (0, 0);
+                grid[(0, 0)] = alignedTiles[0];
+
+                //xPos[alignedTiles[0]] = 0;
+                //yPos[alignedTiles[0]] = 0;
+
+                bool foundAnyMatch = true;
+                while (foundAnyMatch && tilesToAlign.Count > 0)
+                {
+                    bool foundMatch = false;
+                    foundAnyMatch = false;
+                    for (int i = 0; !foundMatch && i < tilesToAlign.Count; i++)
+                    {
+                        var tile = tilesToAlign[i];
+
+                        for (int transformCount = 1; !foundMatch && transformCount < possibleTileArrangements; transformCount++)
+                        {
+                            if (transformCount % 4 == 0 || transformCount % 6 == 0)
+                            {
+                                tile.FlipHorizontal();
+                            }
+
+                            tile.Rotate90();
+
+                            int x, y;
+
+                            foreach (var at in alignedTiles)
+                            {
+                                if (tile.TopLine == at.BottomLine)
+                                {
+                                    x = posInGrid[at].x;
+                                    y = posInGrid[at].y + 1;
+                                }
+                                else if (tile.BottomLine == at.TopLine)
+                                {
+                                    x = posInGrid[at].x;
+                                    y = posInGrid[at].y - 1;
+                                }
+                                else if (tile.LeftLine == at.RightLine)
+                                {
+                                    x = posInGrid[at].x + 1;
+                                    y = posInGrid[at].y;
+                                }
+                                else if (tile.RightLine == at.LeftLine)
+                                {
+                                    x = posInGrid[at].x - 1;
+                                    y = posInGrid[at].y;
+                                }
+                                else continue;
+
+                                if (grid.ContainsKey((x, y)))
+                                {
+                                    // think more what to do here
+                                    continue;
+                                }
+
+                                var leftPos = (x - 1, y);
+                                if (grid.ContainsKey(leftPos))
+                                {
+                                    var leftTile = grid[leftPos];
+                                    if (tile.LeftLine != leftTile.RightLine)
+                                        continue;
+                                }
+
+                                var rightPos = (x + 1, y);
+                                if (grid.ContainsKey(rightPos))
+                                {
+                                    var rightTile = grid[rightPos];
+                                    if (tile.RightLine != rightTile.LeftLine)
+                                        continue;
+                                }
+
+                                var belowPos = (x, y + 1);
+                                if (grid.ContainsKey(belowPos))
+                                {
+                                    var belowTile = grid[belowPos];
+                                    if (tile.BottomLine != belowTile.TopLine)
+                                        continue;
+                                }
+
+                                var abovePos = (x, y - 1);
+                                if (grid.ContainsKey(abovePos))
+                                {
+                                    var aboveTile = grid[abovePos];
+                                    if (tile.TopLine != aboveTile.BottomLine)
+                                        continue;
+                                }
+
+                                //we know we found match
+                                foundMatch = true;
+                                foundAnyMatch = true;
+
+                                alignedTiles.Add(tile);
+                                tilesToAlign.Remove(tile);
+
+                                posInGrid[tile] = (x, y);
+                                grid[(x, y)] = tile;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (tilesToAlign.Count == 0)
+                {
+                    try
+                    {
+                        int maxX = posInGrid.Values.Select(w => w.x).Max();
+                        int maxY = posInGrid.Values.Select(w => w.y).Max();
+                        int minX = posInGrid.Values.Select(w => w.x).Min();
+                        int minY = posInGrid.Values.Select(w => w.y).Min();
+
+                        var topLeft = grid[(minX, minY)];
+                        var topRight = grid[(maxX, minY)];
+                        var bottomLeft = grid[(minX, maxY)];
+                        var bottomRight = grid[(maxX, maxY)];
+
+                        return topLeft.Id * topRight.Id * bottomLeft.Id * bottomRight.Id;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
 
             return 0;
-
-            bool MatchesAnyAlignedEdge(ImageTile t)
-            {
-                foreach (var at in alignedTiles)
-                {
-                    if (at.TopLine == t.BottomLine) return true;
-                    if (at.BottomLine == t.TopLine) return true;
-                    if (at.LeftLine == t.RightLine) return true;
-                    if (at.RightLine == t.LeftLine) return true;
-                }
-
-                return false;
-            }
         }
 
         class ImageTile
@@ -100,6 +257,8 @@ namespace Day20_ImageTiles
             private readonly Cached<long> cachedTopLine;
 
             private int rotation = 0;
+            private bool isFlippedHorizontally = false;
+            private bool isFlippedVerticallly = false;
 
             public ImageTile()
             {
@@ -128,7 +287,42 @@ namespace Day20_ImageTiles
                 this.ResetLines();
             }
 
-            public void Flip()
+            public void Reset()
+            {
+                if (this.isFlippedHorizontally)
+                {
+                    this.FlipHorizontal();
+                }
+
+                if (this.isFlippedVerticallly)
+                {
+                    this.FlipVertical();
+                }
+
+                this.rotation = 0;
+                this.ResetLines();
+            }
+
+            public void SetIntoConfig(int config)
+            {
+                this.Reset();
+
+                if (config == 1)
+                {
+                    this.FlipVertical();
+                }
+                else if (config == 2)
+                {
+                    this.FlipHorizontal();
+                }
+                else if (config == 3)
+                {
+                    this.FlipVertical();
+                    this.FlipHorizontal();
+                }
+            }
+
+            public void FlipHorizontal()
             {
                 var flippedRows = new List<string>();
 
@@ -141,6 +335,13 @@ namespace Day20_ImageTiles
                 this.rows.AddRange(flippedRows);
 
                 this.ResetLines();
+                this.isFlippedHorizontally = !this.isFlippedHorizontally;
+            }
+
+            public void FlipVertical()
+            {
+                this.rows.Reverse();
+                this.isFlippedVerticallly = !this.isFlippedVerticallly;
             }
 
             private void SetId(string row)
@@ -170,7 +371,7 @@ namespace Day20_ImageTiles
             {
                 var edgeAfterTotation = this.rotation + edge;
                 while ((int)edgeAfterTotation > 4) edgeAfterTotation -= 4;
-                while ((int)edgeAfterTotation < 0) edgeAfterTotation += 4;
+                while ((int)edgeAfterTotation <= 0) edgeAfterTotation += 4;
 
                 if (edgeAfterTotation == Edge.Top)
                 {
