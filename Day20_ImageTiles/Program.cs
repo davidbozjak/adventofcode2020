@@ -45,28 +45,9 @@ namespace Day20_ImageTiles
                 {
                     if (tile == potentialN) continue;
 
-                    potentialN.Reset();
-                    bool couldBeN = false;
-
-                    for (int config = 0; !couldBeN && config < 4; config++)
+                    if (ArePotentialNeighbours(tile, potentialN))
                     {
-                        potentialN.SetIntoConfig(config);
-
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (tile.TopLine == potentialN.BottomLine ||
-                                tile.BottomLine == potentialN.TopLine ||
-                                tile.LeftLine == potentialN.RightLine ||
-                                tile.RightLine == potentialN.LeftLine)
-                            {
-                                couldBeN = true;
-                                foundNeighbours++;
-                                break;
-                            }
-
-
-                            potentialN.Rotate90();
-                        }
+                        foundNeighbours++;
                     }
                 }
 
@@ -80,6 +61,29 @@ namespace Day20_ImageTiles
             }
 
             return cornerTiles;
+        }
+
+        private static bool ArePotentialNeighbours(ImageTile tile1, ImageTile tile2)
+        {
+            for (int config = 0; config < 4; config++)
+            {
+                tile2.SetIntoConfig(config);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (tile1.TopLine == tile2.BottomLine ||
+                        tile1.BottomLine == tile2.TopLine ||
+                        tile1.LeftLine == tile2.RightLine ||
+                        tile1.RightLine == tile2.LeftLine)
+                    {
+                        return true;
+                    }
+
+                    tile2.Rotate90();
+                }
+            }
+
+            return false;
         }
 
         private static long AssembleTilesToImage(IList<ImageTile> tiles)
