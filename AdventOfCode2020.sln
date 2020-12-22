@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day20_ImageTiles", "Day20_I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day21_Allergies", "Day21_Allergies\Day21_Allergies.csproj", "{9E8663A6-BDDC-493B-8FEF-B6F98E4ECF15}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day22_RecursiveCombat", "Day22_RecursiveCombat\Day22_RecursiveCombat.csproj", "{EEF03828-A214-43D3-A679-CF9DD97164DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{9E8663A6-BDDC-493B-8FEF-B6F98E4ECF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E8663A6-BDDC-493B-8FEF-B6F98E4ECF15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E8663A6-BDDC-493B-8FEF-B6F98E4ECF15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF03828-A214-43D3-A679-CF9DD97164DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF03828-A214-43D3-A679-CF9DD97164DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF03828-A214-43D3-A679-CF9DD97164DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF03828-A214-43D3-A679-CF9DD97164DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
