@@ -15,7 +15,45 @@ namespace Day23_CircularCrabs
             //example input:
             //var list = new List<int> { 3, 8, 9, 1, 2, 5, 4, 6, 7 };
 
-            for (int i = list.Count + 1; i <= 1000000; i++)
+            Part1(list);
+
+            Part2(list);
+        }
+
+        static void Part1(IList<int> inputList)
+        {
+            (Element first, Dictionary<int, Element> lookup) = InitializeCircularList(inputList, 0);
+
+            Run(100, first, lookup);
+
+            var startIndex = lookup[1];
+            string result = string.Empty;
+
+            for (var element = startIndex.Next; element != startIndex; element = element.Next)
+            {
+                result += element.Id;
+            }
+
+            Console.WriteLine($"Part 1: {result}");
+        }
+
+        static void Part2(IList<int> inputList)
+        {
+            (Element first, Dictionary<int, Element> lookup) = InitializeCircularList(inputList, 1000000);
+
+            Run(10000000, first, lookup);
+
+            var startIndex = lookup[1];
+            var result = (long)startIndex.Next.Id * (long)startIndex.Next.Next.Id;
+
+            Console.WriteLine($"Part 2: {startIndex.Next.Id} * {startIndex.Next.Next.Id} = {result}");
+        }
+
+        static (Element firstElement, Dictionary<int, Element> lookup) InitializeCircularList(IEnumerable<int> initialMembers, int addSequentialUpToAndIncluding)
+        {
+            var list = new List<int>(initialMembers);
+
+            for (int i = list.Count + 1; i <= addSequentialUpToAndIncluding; i++)
                 list.Add(i);
 
             Dictionary<int, Element> lookup = new Dictionary<int, Element>();
@@ -35,15 +73,20 @@ namespace Day23_CircularCrabs
                 lastCreated = element;
             }
 
-            int maxElementValue = list.Max();
-
             //compelte the circle
             first.Previous = lastCreated;
             lastCreated.Next = first;
 
+            return (first, lookup);
+        }
+
+        static void Run(int noOfRounds, Element first, Dictionary<int, Element> lookup)
+        {
             Element current = first;
 
-            for (long i = 0; i < 10000000; i++)
+            int maxElementValue = lookup.Keys.Max();
+
+            for (long i = 0; i < noOfRounds; i++)
             {
                 var currentCup = current.Id;
 
@@ -89,22 +132,6 @@ namespace Day23_CircularCrabs
 
                 current = current.Next;
             }
-
-            // final printout Part 1
-            var startIndex = lookup[1];
-            //string result = string.Empty;
-
-            //for (var element = startIndex.Next; element != startIndex; element = element.Next)
-            //{
-            //    result += element.Id;
-            //}
-
-            //Console.WriteLine($"Part 1: {result}");
-
-            // final printout Part 2
-            var result = startIndex.Next.Id * startIndex.Next.Next.Id;
-
-            Console.WriteLine($"Part 2: {startIndex.Next.Id} * {startIndex.Next.Next.Id} = {(long)startIndex.Next.Id * (long)startIndex.Next.Next.Id}");
         }
 
         class Element
