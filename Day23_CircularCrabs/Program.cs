@@ -1,5 +1,4 @@
-﻿using SantasToolbox;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,12 +40,17 @@ namespace Day23_CircularCrabs
         {
             (Element first, Dictionary<int, Element> lookup) = InitializeCircularList(inputList, 1000000);
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
             Run(10000000, first, lookup);
+
+            stopwatch.Stop();
 
             var startIndex = lookup[1];
             var result = (long)startIndex.Next.Id * (long)startIndex.Next.Next.Id;
 
             Console.WriteLine($"Part 2: {startIndex.Next.Id} * {startIndex.Next.Next.Id} = {result}");
+            Console.WriteLine($"Elapsed time: {stopwatch.Elapsed}");
         }
 
         static (Element firstElement, Dictionary<int, Element> lookup) InitializeCircularList(IEnumerable<int> initialMembers, int addSequentialUpToAndIncluding)
