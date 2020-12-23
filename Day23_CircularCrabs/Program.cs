@@ -90,10 +90,6 @@ namespace Day23_CircularCrabs
             {
                 var currentCup = current.Id;
 
-                //Console.WriteLine($"Round {i + 1}");
-                //Console.WriteLine(string.Join(" ", list));
-                //Console.WriteLine($"Current cup: {currentCup}");
-
                 var pickup1 = current.Next;
                 var pickup2 = current.Next.Next;
                 var pickup3 = current.Next.Next.Next;
@@ -101,8 +97,6 @@ namespace Day23_CircularCrabs
                 //remove them by simply linking them out
                 current.Next = pickup3.Next;
                 pickup3.Previous = current;
-
-                //Console.WriteLine($"Pick up: {pickup1}, {pickup2}, {pickup3}");
 
                 var destinationCupLabel = currentCup - 1;
 
@@ -118,11 +112,9 @@ namespace Day23_CircularCrabs
                     }
                 }
 
-                //Console.WriteLine($"Destination: {destinationCupLabel}");
-                //Console.WriteLine();
-
                 var destination = lookup[destinationCupLabel];
 
+                // insert into the list by simply "waving them in"
                 var originalNext = destination.Next;
                 destination.Next = pickup1;
                 pickup1.Previous = destination;
