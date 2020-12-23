@@ -5,18 +5,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Input.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Input.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SantasToolbox\SantasToolbox.csproj" />
-  </ItemGroup>
-
 </Project>
