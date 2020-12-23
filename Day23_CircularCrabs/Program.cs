@@ -10,79 +10,119 @@ namespace Day23_CircularCrabs
         static void Main(string[] args)
         {
             //real input:
-            //var list = new List<int> { 5, 2, 3, 7, 6, 4, 8, 1, 9 };
+            var list = new List<int> { 5, 2, 3, 7, 6, 4, 8, 1, 9 };
 
             //example input:
-            var list = new List<int> { 3, 8, 9, 1, 2, 5, 4, 6, 7 };
+            //var list = new List<int> { 3, 8, 9, 1, 2, 5, 4, 6, 7 };
 
-            int currentIndex = 0;
+            for (int i = list.Count + 1; i <= 1000000; i++)
+                list.Add(i);
 
-            for (int i = 0; i < 100; i++)
+            Dictionary<int, Element> lookup = new Dictionary<int, Element>();
+
+            Element first = new Element(list[0]);
+            lookup[list[0]] = first;
+            Element lastCreated = first;
+
+            for (int i = 1; i < list.Count; i++)
             {
-                var currentCup = list[TransformIndex(currentIndex)];
+                Element element = new Element(list[i]);
+                lookup[list[i]] = element;
+
+                element.Previous = lastCreated;
+                lastCreated.Next = element;
+
+                lastCreated = element;
+            }
+
+            int maxElementValue = list.Max();
+
+            //compelte the circle
+            first.Previous = lastCreated;
+            lastCreated.Next = first;
+
+            Element current = first;
+
+            for (long i = 0; i < 10000000; i++)
+            {
+                var currentCup = current.Id;
+
                 //Console.WriteLine($"Round {i + 1}");
                 //Console.WriteLine(string.Join(" ", list));
                 //Console.WriteLine($"Current cup: {currentCup}");
-                
-                var pickup1 = list[TransformIndex(currentIndex + 1)];
-                var pickup2 = list[TransformIndex(currentIndex + 2)];
-                var pickup3 = list[TransformIndex(currentIndex + 3)];
 
-                list.Remove(pickup1);
-                list.Remove(pickup2);
-                list.Remove(pickup3);
+                var pickup1 = current.Next;
+                var pickup2 = current.Next.Next;
+                var pickup3 = current.Next.Next.Next;
+
+                //remove them by simply linking them out
+                current.Next = pickup3.Next;
+                pickup3.Previous = current;
 
                 //Console.WriteLine($"Pick up: {pickup1}, {pickup2}, {pickup3}");
 
                 var destinationCupLabel = currentCup - 1;
 
-                while (!list.Contains(destinationCupLabel))
+                var removedItems = new[] { 0, pickup1.Id, pickup2.Id, pickup3.Id };
+
+                while (removedItems.Contains(destinationCupLabel))
                 {
                     destinationCupLabel--;
 
-                    if (destinationCupLabel < 0)
+                    if (destinationCupLabel <= 0)
                     {
-                        destinationCupLabel = list.Max();
+                        destinationCupLabel = maxElementValue;
                     }
                 }
 
                 //Console.WriteLine($"Destination: {destinationCupLabel}");
                 //Console.WriteLine();
 
-                var destinationIndex = list.FindIndex(w => w == destinationCupLabel);
+                var destination = lookup[destinationCupLabel];
 
-                list.Insert(TransformIndexInsert(destinationIndex + 1), pickup1);
-                list.Insert(TransformIndexInsert(destinationIndex + 2), pickup2);
-                list.Insert(TransformIndexInsert(destinationIndex + 3), pickup3);
+                var originalNext = destination.Next;
+                destination.Next = pickup1;
+                pickup1.Previous = destination;
 
-                currentIndex = TransformIndex(list.FindIndex(w => w == currentCup) + 1);
+                pickup3.Next = originalNext;
+                originalNext.Previous = pickup3;
+
+                current = current.Next;
             }
 
             // final printout Part 1
-            var startIndex = list.FindIndex(w => w == 1);
-            string result = string.Empty;
+            var startIndex = lookup[1];
+            //string result = string.Empty;
 
-            for (int i = 0; i < list.Count - 1; i++)
+            //for (var element = startIndex.Next; element != startIndex; element = element.Next)
+            //{
+            //    result += element.Id;
+            //}
+
+            //Console.WriteLine($"Part 1: {result}");
+
+            // final printout Part 2
+            var result = startIndex.Next.Id * startIndex.Next.Next.Id;
+
+            Console.WriteLine($"Part 2: {startIndex.Next.Id} * {startIndex.Next.Next.Id} = {(long)startIndex.Next.Id * (long)startIndex.Next.Next.Id}");
+        }
+
+        class Element
+        {
+            public int Id { get; }
+
+            public Element Next { get; set; }
+
+            public Element Previous { get; set; }
+
+            public Element(int id)
             {
-                result += list[TransformIndex(i + startIndex + 1)];
+                this.Id = id;
             }
 
-            Console.WriteLine($"Part 1: {result}");
-
-            int TransformIndex(int index)
+            public override string ToString()
             {
-                while (index < 0) index += list.Count;
-                while (index >= list.Count) index -= list.Count;
-
-                return index;
-            }
-
-            int TransformIndexInsert(int index)
-            {
-                while (index < 0) index += list.Count;
-                while (index > list.Count) index -= list.Count;
-
-                return index;
+                return this.Id.ToString();
             }
         }
     }
