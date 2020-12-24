@@ -15,15 +15,23 @@ namespace Day24_HexTiles
 
             var input = inputProvider.Where(w => w != null).Cast<Tile>().ToList();
 
+            Part1(input);
+
+            Part2();
+        }
+
+        static void Part1(IList<Tile> input)
+        {
             foreach (var tile in input)
             {
                 tile.Flip();
             }
 
             Console.WriteLine($"Part 1: Number of black tiles: {input.Count(w => !w.Color)}");
+        }
 
-            //var originalTiles = tileFactory.AllCreatedInstances.ToList();
-
+        static void Part2()
+        {
             for (int day = 0; day < 100; day++)
             {
                 var tilesToFlip = new List<Tile>();
@@ -78,9 +86,9 @@ namespace Day24_HexTiles
                 {
                     tile.Flip();
                 }
-
-                Console.WriteLine($"Day {day + 1}: {tileFactory.AllCreatedInstances.Count(w => !w.Color)}");
             }
+
+            Console.WriteLine($"Part 2: Black tiles after 100 days: {tileFactory.AllCreatedInstances.Count(w => !w.Color)}");
         }
 
         static bool GetTile(string? input, out Tile? value)
@@ -176,8 +184,6 @@ namespace Day24_HexTiles
 
             public bool Color { get; private set; }
 
-            //private bool newColor;
-
             public Tile (int x, int y)
             {
                 this.X = x;
@@ -188,18 +194,7 @@ namespace Day24_HexTiles
             public void Flip()
             {
                 this.Color = !this.Color;
-                //this.newColor = this.Color;
             }
-
-            //public void SetNewColor(bool newColor)
-            //{
-            //    this.newColor = newColor;
-            //}
-
-            //public void Update()
-            //{
-            //    this.Color = this.newColor;
-            //}
 
             public override string ToString()
             {
